@@ -11,8 +11,17 @@ const authRoutes = require('./routes/authRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const saleRoutes = require('./routes/saleRoutes');
 const rateLimit = require('express-rate-limit');
+const inventoryRoutes = require('./routes/inventoryRoutes');
 
 const app = express();
+
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+});
+
+app.use(limiter);
 
 app.use(helmet());
 // app.use(cors());
@@ -43,19 +52,17 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-
+app.use(
+    '/api/inventory',
+    inventoryRoutes
+);
 app.use('/api', testRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
 
 
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100
-});
 
-app.use(limiter);
 
 // Root Route
 app.get('/', (req, res) => {
