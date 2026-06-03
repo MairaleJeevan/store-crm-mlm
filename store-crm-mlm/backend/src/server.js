@@ -12,6 +12,7 @@ const customerRoutes = require('./routes/customerRoutes');
 const saleRoutes = require('./routes/saleRoutes');
 const rateLimit = require('express-rate-limit');
 const inventoryRoutes = require('./routes/inventoryRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 const app = express();
 
@@ -60,6 +61,7 @@ app.use('/api', testRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
+app.use('/api/products', productRoutes);
 
 
 
