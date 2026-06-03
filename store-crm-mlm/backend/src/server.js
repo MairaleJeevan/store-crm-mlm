@@ -13,6 +13,7 @@ const saleRoutes = require('./routes/saleRoutes');
 const rateLimit = require('express-rate-limit');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const productRoutes = require('./routes/productRoutes');
+const reportRoutes = require('./routes/reportRoutes');
 
 const app = express();
 
@@ -52,6 +53,11 @@ app.get('/api/health', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
+
+app.use(
+    '/api/reports',
+    reportRoutes
+);
 
 app.use(
     '/api/inventory',
