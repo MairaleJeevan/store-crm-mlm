@@ -14,6 +14,7 @@ const rateLimit = require('express-rate-limit');
 const inventoryRoutes = require('./routes/inventoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 const reportRoutes = require('./routes/reportRoutes');
+const mlmRoutes = require('./routes/mlmRoutes');
 
 const app = express();
 
@@ -54,15 +55,11 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-app.use(
-    '/api/reports',
-    reportRoutes
-);
+app.use('/api/reports', reportRoutes);
 
-app.use(
-    '/api/inventory',
-    inventoryRoutes
-);
+app.use('/api/mlm', mlmRoutes);
+
+app.use('/api/inventory', inventoryRoutes);
 app.use('/api', testRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
