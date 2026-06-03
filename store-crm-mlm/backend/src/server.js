@@ -10,6 +10,7 @@ const testRoutes = require('./routes/testRoutes');
 const authRoutes = require('./routes/authRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const saleRoutes = require('./routes/saleRoutes');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
 
@@ -47,6 +48,14 @@ app.use('/api', testRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
+
+
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 100
+});
+
+app.use(limiter);
 
 // Root Route
 app.get('/', (req, res) => {

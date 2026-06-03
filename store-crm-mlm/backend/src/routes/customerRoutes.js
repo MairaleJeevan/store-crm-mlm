@@ -4,6 +4,12 @@ const router = express.Router();
 
 const authMiddleware = require('../middleware/authMiddleware');
 
+const validate =
+    require('../middleware/validationMiddleware');
+
+const customerValidation =
+    require('../validators/customerValidator');
+
 const {
     createCustomer,
     getCustomers,
@@ -15,7 +21,13 @@ const {
 
 router.use(authMiddleware);
 
-router.post('/', createCustomer);
+router.post(
+    '/',
+    authMiddleware,
+    customerValidation,
+    validate,
+    createCustomer
+);
 
 router.get('/', getCustomers);
 
