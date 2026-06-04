@@ -1,5 +1,8 @@
+// backend/src/controllers/mlmController.js
+
 const supabase = require('../config/supabase');
 const generateReferralCode = require('../utils/referralCode');
+const bcrypt = require('bcryptjs');
 
 // Register MLM User
 const registerMLMUser = async (req, res) => {
@@ -16,6 +19,7 @@ const registerMLMUser = async (req, res) => {
         let sponsorId = null;
         let level = 1;
 
+        // Check Sponsor
         if (sponsor_referral_code) {
 
             const {
@@ -34,16 +38,32 @@ const registerMLMUser = async (req, res) => {
 
                 return res.status(400).json({
                     success: false,
-                    message:
-                        'Invalid sponsor referral code'
+                    message: 'Invalid sponsor referral code'
                 });
             }
 
             sponsorId = sponsor.id;
-            level = sponsor.level + 1;
+            level = (sponsor.level || 1) + 1;
         }
 
-        // Create auth user
+        // Check Existing User
+        const {
+            data: existingUser
+        } = await supabase
+            .from('users')
+            .select('id')
+            .eq('email', email)
+            .maybeSingle();
+
+        if (existingUser) {
+
+            return res.status(400).json({
+                success: false,
+                message: 'User already exists'
+            });
+        }
+
+        // Create Supabase Auth User
         const {
             data: authUser,
             error: authError
@@ -53,11 +73,19 @@ const registerMLMUser = async (req, res) => {
             email_confirm: true
         });
 
-        if (authError) throw authError;
+        if (authError) {
+            throw authError;
+        }
 
+        // Hash Password for CRM users table
+        const hashedPassword =
+            await bcrypt.hash(password, 10);
+
+        // Generate Referral Code
         const referralCode =
             generateReferralCode();
 
+        // Insert Into CRM Users Table
         const {
             data,
             error
@@ -67,21 +95,28 @@ const registerMLMUser = async (req, res) => {
                 id: authUser.user.id,
                 full_name,
                 email,
+                password_hash: hashedPassword,
                 role: 'MLM_USER',
+                is_active: true,
                 referral_code: referralCode,
                 sponsor_id: sponsorId,
                 level
             }])
             .select();
 
-        if (error) throw error;
+        if (error) {
+            throw error;
+        }
 
         return res.status(201).json({
             success: true,
+            message: 'MLM User Registered Successfully',
             data
         });
 
     } catch (error) {
+
+        console.error('MLM Registration Error:', error);
 
         return res.status(500).json({
             success: false,
@@ -103,13 +138,24 @@ const getDownlines = async (req, res) => {
             error
         } = await supabase
             .from('users')
-            .select('*')
+            .select(`
+                id,
+                full_name,
+                email,
+                role,
+                referral_code,
+                sponsor_id,
+                level,
+                created_at
+            `)
             .eq(
                 'sponsor_id',
                 userId
             );
 
-        if (error) throw error;
+        if (error) {
+            throw error;
+        }
 
         return res.json({
             success: true,
@@ -126,7 +172,104 @@ const getDownlines = async (req, res) => {
     }
 };
 
+
+// Build Team Tree Recursively
+const buildTeamTree = async (userId) => {
+
+    const {
+        data: members,
+        error
+    } = await supabase
+        .from('users')
+        .select(`
+            id,
+            full_name,
+            email,
+            referral_code,
+            level
+        `)
+        .eq('sponsor_id', userId);
+
+    if (error) {
+        throw error;
+    }
+
+    const result = [];
+
+    for (const member of members) {
+
+        const children =
+            await buildTeamTree(member.id);
+
+        result.push({
+            ...member,
+            downlines: children
+        });
+    }
+
+    return result;
+};
+
+// Get Team Tree
+const getTeamTree = async (req, res) => {
+
+    try {
+
+        const userId =
+            req.params.userId;
+
+        const tree =
+            await buildTeamTree(userId);
+
+        return res.json({
+            success: true,
+            data: tree
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+// MLM Dashboard
+const getMLMDashboard = async (req, res) => {
+
+    try {
+
+        const userId = req.params.userId;
+
+        const { data: downlines } =
+            await supabase
+                .from('users')
+                .select('id')
+                .eq('sponsor_id', userId);
+
+        const directCount =
+            downlines?.length || 0;
+
+        return res.json({
+            success: true,
+            dashboard: {
+                directDownlines:
+                    directCount
+            }
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     registerMLMUser,
-    getDownlines
+    getDownlines,
+    getTeamTree,
+    getMLMDashboard
 };

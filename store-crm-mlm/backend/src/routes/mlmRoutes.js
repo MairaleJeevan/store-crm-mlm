@@ -7,8 +7,17 @@ const authMiddleware =
 
 const {
     registerMLMUser,
-    getDownlines
+    getDownlines,
+    getTeamTree,
+    getMLMDashboard
 } = require('../controllers/mlmController');
+
+console.log({
+    registerMLMUser,
+    getDownlines,
+    getTeamTree,
+    getMLMDashboard
+});
 
 // Register MLM User
 router.post(
@@ -22,6 +31,18 @@ router.get(
     '/downlines/:userId',
     authMiddleware,
     getDownlines
+);
+
+// Get Team Tree
+router.get(
+    '/team/:userId',
+    authMiddleware,
+    getTeamTree
+);
+router.get(
+    '/dashboard/:userId',
+    authMiddleware,
+    getMLMDashboard
 );
 
 module.exports = router;

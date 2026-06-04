@@ -6,16 +6,14 @@ const authMiddleware =
     require('../middleware/authMiddleware');
 
 const {
-    getDashboardSummary,
-    getCustomerReport
-} = require('../controllers/reportController');
+    getMyCommissions
+} = require('../controllers/commissionController');
 
 router.use(authMiddleware);
 
-router.get('/dashboard',getDashboardSummary);
-
-router.get('/customers', getCustomerReport);
-
-
+router.get(
+    '/:userId',
+    getMyCommissions
+);
 
 module.exports = router;

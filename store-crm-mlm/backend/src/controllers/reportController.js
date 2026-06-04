@@ -22,6 +22,16 @@ const getDashboardSummary = async (req, res) => {
                     head: true
                 });
 
+        // MLM Users
+        const { count: mlmUsers } =
+            await supabase
+                .from('users')
+                .select('*', {
+                    count: 'exact',
+                    head: true
+                })
+                .eq('role', 'MLM_USER');
+
         // Sales
         const { data: sales } =
             await supabase
@@ -31,7 +41,8 @@ const getDashboardSummary = async (req, res) => {
         const totalSales =
             sales?.reduce(
                 (sum, item) =>
-                    sum + Number(item.amount || 0),
+                    sum +
+                    Number(item.amount || 0),
                 0
             ) || 0;
 
@@ -39,13 +50,39 @@ const getDashboardSummary = async (req, res) => {
             sales?.reduce(
                 (sum, item) =>
                     sum +
-                    Number(
-                        item.incentive_amount || 0
-                    ),
+                    Number(item.incentive_amount || 0),
                 0
             ) || 0;
 
-        // Products
+        // Today's Sales
+        const today =
+            new Date()
+                .toISOString()
+                .split('T')[0];
+
+        const todaySales =
+            sales?.reduce(
+                (sum, item) => {
+
+                    const saleDate =
+                        item.created_at
+                            ?.split('T')[0];
+
+                    if (saleDate === today) {
+
+                        return (
+                            sum +
+                            Number(item.amount || 0)
+                        );
+                    }
+
+                    return sum;
+
+                },
+                0
+            ) || 0;
+
+        // Products List
         const { data: products } =
             await supabase
                 .from('products')
@@ -53,16 +90,32 @@ const getDashboardSummary = async (req, res) => {
 
         const lowStock =
             products?.filter(
-                p =>
+                product =>
                     Number(
-                        p.stock_quantity || 0
+                        product.stock_quantity || 0
                     ) <=
                     Number(
-                        p.min_stock || 0
+                        product.min_stock || 0
                     )
             ) || [];
 
-        return res.json({
+        // Commissions
+        const { data: commissions } =
+            await supabase
+                .from('commissions')
+                .select('*');
+
+        const totalCommissions =
+            commissions?.reduce(
+                (sum, item) =>
+                    sum +
+                    Number(
+                        item.commission_amount || 0
+                    ),
+                0
+            ) || 0;
+
+        return res.status(200).json({
             success: true,
             data: {
                 totalCustomers:
@@ -71,13 +124,56 @@ const getDashboardSummary = async (req, res) => {
                 totalProducts:
                     productCount || 0,
 
+                totalMLMUsers:
+                    mlmUsers || 0,
+
                 totalSales,
 
                 totalIncentives,
 
+                totalCommissions,
+
+                todaySales,
+
                 lowStockProducts:
                     lowStock.length
             }
+        });
+
+    } catch (error) {
+
+        console.error(
+            'Dashboard Error:',
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+const getCustomerReport = async (req, res) => {
+
+    try {
+
+        const { data, error } =
+            await supabase
+                .from('customers')
+                .select(`
+                    *,
+                    sales (
+                        amount,
+                        created_at
+                    )
+                `);
+
+        if (error) throw error;
+
+        return res.json({
+            success: true,
+            count: data.length,
+            data
         });
 
     } catch (error) {
@@ -90,5 +186,6 @@ const getDashboardSummary = async (req, res) => {
 };
 
 module.exports = {
-    getDashboardSummary
+    getDashboardSummary,
+    getCustomerReport
 };

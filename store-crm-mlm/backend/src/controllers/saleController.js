@@ -1,4 +1,5 @@
 const supabase = require('../config/supabase');
+const {generateCommission} = require('./commissionController');
 
 // Create Sale
 const createSale = async (req, res) => {
@@ -75,8 +76,65 @@ const createSale = async (req, res) => {
             .from('sales')
             .insert([saleData])
             .select();
+        if (data && data.length > 0) {
 
+            await generateCommission(
+                data[0].id,
+                req.user.id,
+                amount
+            );
+        }
         if (error) throw error;
+
+        // Find customer sponsor
+
+        const {
+            data: customerSponsor
+        } = await supabase
+            .from('customers')
+            .select('sponsor_id')
+            .eq('id', customer_id)
+            .single();
+
+        if (customerSponsor?.sponsor_id) {
+
+            const commissionAmount =
+                Number(amount) * 0.05;
+
+           const { data: commissionData, error: commissionError } =
+                            await supabase
+                                .from('commissions')
+                                .insert([{
+                                    sale_id: data[0].id,
+
+                                    beneficiary_user_id:
+                                        customerSponsor.sponsor_id,
+
+                                    source_user_id:
+                                        req.user.id,
+
+                                    commission_level: 1,
+
+                                    commission_percentage: 5,
+
+                                    commission_amount:
+                                        commissionAmount
+                                }])
+                                .select();
+
+                        console.log(
+                            'Commission Result:',
+                            commissionData,
+                            commissionError
+                        );
+                   
+
+            console.log(
+                'Commission Insert:',
+                commissionData,
+                commissionError
+            );
+        }
 
         return res.status(201).json({
             success: true,
