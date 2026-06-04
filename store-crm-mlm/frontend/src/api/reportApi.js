@@ -8,3 +8,14 @@ export const getDashboardSummary = async () => {
 
     return response.data;
 };
+
+export const getDashboardCharts =
+    async () => {
+
+        const response =
+            await api.get(
+                '/reports/charts'
+            );
+
+        return response.data;
+    };

@@ -6,14 +6,29 @@ const authMiddleware =
     require('../middleware/authMiddleware');
 
 const {
-    getMyCommissions
+    getMyCommissions,
+    getAllCommissions
 } = require('../controllers/commissionController');
 
 router.use(authMiddleware);
 
+// Admin - All Commissions
+router.get(
+    '/',
+    getAllCommissions
+);
+
+router.get(
+    '/my',
+    getMyCommissions
+);
+
+// User - My Commissions
 router.get(
     '/:userId',
     getMyCommissions
 );
+
+
 
 module.exports = router;

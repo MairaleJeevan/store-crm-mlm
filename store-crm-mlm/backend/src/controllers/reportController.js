@@ -297,11 +297,34 @@ const getLowStockReport = async (req, res) => {
         });
     }
 };
+const getDashboardCharts = async (req, res) => {
+
+    try {
+
+        const { data: sales } =
+            await supabase
+                .from('sales')
+                .select('amount, created_at');
+
+        return res.json({
+            success: true,
+            sales
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 
 module.exports = {
     getDashboardSummary,
     getCustomerReport,
     getSalesReport,
     getCommissionReport,
-    getLowStockReport
+    getLowStockReport,
+    getDashboardCharts
 };

@@ -183,7 +183,45 @@ const getMyCommissions = async (
     }
 };
 
+const getAllCommissions = async (
+    req,
+    res
+) => {
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabase
+            .from('commissions')
+            .select('*')
+            .order(
+                'created_at',
+                {
+                    ascending: false
+                }
+            );
+
+        if (error) throw error;
+
+        return res.json({
+            success: true,
+            count: data.length,
+            data
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     generateCommission,
-    getMyCommissions
+    getMyCommissions,
+    getAllCommissions
 };

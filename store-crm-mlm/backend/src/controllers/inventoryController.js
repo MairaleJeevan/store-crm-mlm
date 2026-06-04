@@ -58,11 +58,13 @@ const stockIn = async (req, res) => {
 
     } catch (error) {
 
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
+    console.error('STOCK IN ERROR:', error);
+
+    return res.status(500).json({
+        success: false,
+        message: error.message
+    });
+}
 };
 
 // Stock Out

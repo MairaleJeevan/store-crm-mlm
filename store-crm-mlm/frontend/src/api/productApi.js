@@ -37,3 +37,12 @@ export const deleteProduct = async (
 
     return response.data;
 };
+
+export const getLowStockProducts = async () => {
+
+    const response = await api.get(
+        '/products/low-stock'
+    );
+
+    return response.data;
+};

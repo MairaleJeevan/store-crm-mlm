@@ -50,6 +50,26 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
+
+                         <li>
+                            <Link
+                                to="/inventory"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Inventory
+                            </Link>
+                        </li>
+                        
+
+                        <li>
+                            <Link
+                                to="/low-stock"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Low Stock
+                            </Link>
+                        </li>
+
                         <li>
                             <Link
                                 to="/sales"
@@ -59,16 +79,49 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
+                        <li>
+                            <Link
+                                to="/commissions"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Commissions
+                            </Link>
+                        </li>
+  
+                        <li>
+                            <Link
+                                to="/exports"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Exports
+                            </Link>
+                        </li>
+
+
+                       
+
+
                         {user?.role === 'ADMIN' && (
 
-                            <li>
-                                <Link
-                                    to="/users"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
-                                >
-                                    User Management
-                                </Link>
-                            </li>
+                            <>
+                                <li>
+                                    <Link
+                                        to="/users"
+                                        className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    >
+                                        User Management
+                                    </Link>
+                                </li>
+
+                                <li>
+                                    <Link
+                                        to="/mlm-tree"
+                                        className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    >
+                                        MLM Tree
+                                    </Link>
+                                </li>
+                            </>
 
                         )}
 
