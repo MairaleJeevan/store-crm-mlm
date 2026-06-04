@@ -7,7 +7,10 @@ const authMiddleware =
 
 const {
     getDashboardSummary,
-    getCustomerReport
+    getCustomerReport,
+    getSalesReport,
+    getCommissionReport,
+    getLowStockReport
 } = require('../controllers/reportController');
 
 router.use(authMiddleware);
@@ -16,6 +19,10 @@ router.get('/dashboard',getDashboardSummary);
 
 router.get('/customers', getCustomerReport);
 
+router.get('/sales', getSalesReport);
 
+router.get('/commissions', getCommissionReport);
+
+router.get('/low-stock', getLowStockReport);
 
 module.exports = router;

@@ -16,6 +16,8 @@ const productRoutes = require('./routes/productRoutes');
 const reportRoutes = require('./routes/reportRoutes');
 const mlmRoutes = require('./routes/mlmRoutes');
 const commissionRoutes = require('./routes/commissionRoutes');
+const exportRoutes = require('./routes/exportRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 
@@ -59,7 +61,7 @@ app.get('/api/health', (req, res) => {
 
 
 app.use('/api/reports', reportRoutes);
-
+app.use('/api/export', exportRoutes);
 app.use('/api/mlm', mlmRoutes);
 app.use('/api/commissions',commissionRoutes);
 app.use('/api/inventory', inventoryRoutes);
@@ -68,7 +70,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/products', productRoutes);
-
+app.use('/api/users', userRoutes);
 
 
 

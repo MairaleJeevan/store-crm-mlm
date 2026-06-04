@@ -6,16 +6,13 @@ import {
 } from 'react-router-dom';
 
 import Login from './pages/auth/Login';
-
 import Dashboard from './pages/dashboard/Dashboard';
-
 import CustomerList from './pages/customers/CustomerList';
-
 import SalesList from './pages/sales/SalesList';
-
 import DashboardLayout from './layouts/DashboardLayout';
-
 import ProtectedRoute from './routes/ProtectedRoute';
+import ProductList from './pages/products/ProductList';
+import UserManagement from './pages/users/UserManagement';
 
 function App() {
 
@@ -52,6 +49,10 @@ function App() {
                         path="/sales"
                         element={<SalesList />}
                     />
+                    <Route
+                        path="/products"
+                        element={<ProductList />}
+                    />
 
                 </Route>
 
@@ -62,6 +63,12 @@ function App() {
                     }
                 />
 
+                <Route
+                    path="/users"
+                    element={<UserManagement />}
+                />
+
+                
             </Routes>
 
         </BrowserRouter>

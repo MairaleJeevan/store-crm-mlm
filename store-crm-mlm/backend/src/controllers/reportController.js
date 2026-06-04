@@ -184,8 +184,124 @@ const getCustomerReport = async (req, res) => {
         });
     }
 };
+const getSalesReport = async (req, res) => {
+
+    try {
+
+        const { data, error } =
+            await supabase
+                .from('sales')
+                .select('*')
+                .order(
+                    'created_at',
+                    { ascending: false }
+                );
+
+        if (error) throw error;
+
+        const totalSales =
+            data.reduce(
+                (sum, row) =>
+                    sum + Number(row.amount),
+                0
+            );
+
+        return res.json({
+            success: true,
+            totalSales,
+            count: data.length,
+            data
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+const getCommissionReport = async (req, res) => {
+
+    try {
+
+        const { data, error } =
+            await supabase
+                .from('commissions')
+                .select('*')
+                .order(
+                    'created_at',
+                    { ascending: false }
+                );
+
+        if (error) throw error;
+
+        const totalCommission =
+            data.reduce(
+                (sum, row) =>
+                    sum +
+                    Number(
+                        row.commission_amount
+                    ),
+                0
+            );
+
+        return res.json({
+            success: true,
+            totalCommission,
+            count: data.length,
+            data
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+const getLowStockReport = async (req, res) => {
+
+    try {
+
+        const { data, error } =
+            await supabase
+                .from('products')
+                .select('*');
+
+        if (error) throw error;
+
+        const lowStock =
+            data.filter(
+                product =>
+                    Number(
+                        product.stock_quantity
+                    ) <=
+                    Number(
+                        product.min_stock
+                    )
+            );
+
+        return res.json({
+            success: true,
+            count: lowStock.length,
+            data: lowStock
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 
 module.exports = {
     getDashboardSummary,
-    getCustomerReport
+    getCustomerReport,
+    getSalesReport,
+    getCommissionReport,
+    getLowStockReport
 };

@@ -43,6 +43,15 @@ const DashboardLayout = () => {
 
                         <li>
                             <Link
+                                to="/products"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Products
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
                                 to="/sales"
                                 className="block px-3 py-2 rounded hover:bg-gray-700"
                             >
