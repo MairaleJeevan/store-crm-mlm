@@ -29,3 +29,11 @@ export const convertLead = async (id) => {
     return res.data;
 };
 
+export const updateLeadStatus = (
+    id,
+    status
+) =>
+    api.put(
+        `/leads/status/${id}`,
+        { status }
+    );

@@ -204,6 +204,15 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
+                        <li>
+                            <Link
+                                to="/sales-targets"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Sales Targets
+                            </Link>
+                        </li>
+
 
                         {user?.role === 'ADMIN' && (
 

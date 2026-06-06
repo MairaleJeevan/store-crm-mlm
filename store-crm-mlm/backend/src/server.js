@@ -25,6 +25,7 @@ const stockDashboardRoutes = require('./routes/stockDashboardRoutes');
 const followupDashboardRoutes = require('./routes/followupDashboardRoutes');
 const customerProfileRoutes = require('./routes/customerProfileRoutes');
 const leadRoutes = require('./routes/leadRoutes');
+const salesTargetRoutes = require('./routes/salesTargetRoutes');
 
 
 
@@ -87,6 +88,8 @@ app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/stock-dashboard',stockDashboardRoutes);
 app.use('/api/followup-dashboard',followupDashboardRoutes);
 app.use('/api/customer-profile', customerProfileRoutes);
+app.use('/api/sales-targets',salesTargetRoutes);
+
 
 
 

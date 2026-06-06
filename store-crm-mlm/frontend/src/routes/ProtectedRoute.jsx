@@ -6,6 +6,10 @@ const ProtectedRoute = ({ children }) => {
 
     const { user, loading } = useAuth();
 
+    console.log('ProtectedRoute');
+    console.log('Loading:', loading);
+    console.log('User:', user);
+
     if (loading) {
         return <div>Loading...</div>;
     }

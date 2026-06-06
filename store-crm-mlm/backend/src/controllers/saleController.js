@@ -1,5 +1,7 @@
 const supabase = require('../config/supabase');
 const {generateCommission} = require('./commissionController');
+const {generateIncentive} = require('./incentiveController');
+const {updateAchievedTarget} = require('./salesTargetController');
 
 // Create Sale
 const createSale = async (req, res) => {
@@ -23,6 +25,7 @@ const createSale = async (req, res) => {
                 });
             }
 
+           
             // Verify customer exists
             const { data: customer, error: customerError } = await supabase
                 .from('customers')
@@ -37,6 +40,8 @@ const createSale = async (req, res) => {
                 });
             }
 
+            
+
             // Get user role
             const { data: users } = await supabase
                 .from('users')
@@ -48,9 +53,9 @@ const createSale = async (req, res) => {
 
         // Get incentive %
         const { data: incentiveData } = await supabase
-            .from('incentives')
+            .from('incentive_config')
             .select('*')
-            .eq('role_name', userRole)
+            .eq('role', userRole)
             .limit(1);
 
         const incentivePercent =
@@ -76,15 +81,31 @@ const createSale = async (req, res) => {
             .from('sales')
             .insert([saleData])
             .select();
+
+        if (error) throw error;
+
         if (data && data.length > 0) {
 
+            // MLM Commission
             await generateCommission(
                 data[0].id,
                 req.user.id,
                 amount
             );
+
+            // Sales Incentive
+            await generateIncentive(
+                data[0].id,
+                req.user.id,
+                amount
+            );
+
+            // Update Achieved Target
+            await updateAchievedTarget(
+            req.user.id,
+            amount
+    );
         }
-        if (error) throw error;
 
         // Find customer sponsor
 
