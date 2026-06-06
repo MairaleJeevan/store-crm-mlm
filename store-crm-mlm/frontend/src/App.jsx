@@ -24,6 +24,9 @@ import RoleProtectedRoute from './routes/RoleProtectedRoute';
 import VehicleList from './pages/vehicles/VehicleList';
 import StockDashboard from './pages/dashboard/StockDashboard';
 import FollowupDashboard from './pages/dashboard/FollowupDashboard';
+import CustomerProfile from './pages/customers/CustomerProfile';
+import LeadList from './pages/leads/LeadList';
+import LeadPipeline from './pages/leads/LeadPipeline';
 
 function App() {
 
@@ -137,7 +140,24 @@ function App() {
                         element={<FollowupDashboard />}
                     />
 
+                    <Route
+                        path="/customer-profile/:id"
+                        element={<CustomerProfile />}
+                    />
+
+                    <Route
+                        path="/leads"
+                        element={<LeadList />}
+                    />
+
+                    <Route
+                        path="/lead-pipeline"
+                        element={<LeadPipeline />}
+                    />
+
                 </Route>
+
+                
 
                 {/* Default Redirect */}
 

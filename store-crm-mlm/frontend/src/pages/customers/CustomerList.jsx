@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import CustomerForm from '../../components/CustomerForm';
 
@@ -21,33 +22,56 @@ const CustomerList = () => {
 
     const loadCustomers = async () => {
 
-        const response =
-            await getCustomers();
+        try {
 
-        setCustomers(response.data.data);
+            const response =
+                await getCustomers();
+
+            setCustomers(response.data.data);
+
+        } catch (error) {
+
+            console.error(error);
+        }
     };
 
     useEffect(() => {
+
         loadCustomers();
+
     }, []);
 
     const handleCreate = async (data) => {
 
-        await createCustomer(data);
+        try {
 
-        loadCustomers();
+            await createCustomer(data);
+
+            loadCustomers();
+
+        } catch (error) {
+
+            console.error(error);
+        }
     };
 
     const handleUpdate = async (data) => {
 
-        await updateCustomer(
-            editingCustomer.id,
-            data
-        );
+        try {
 
-        setEditingCustomer(null);
+            await updateCustomer(
+                editingCustomer.id,
+                data
+            );
 
-        loadCustomers();
+            setEditingCustomer(null);
+
+            loadCustomers();
+
+        } catch (error) {
+
+            console.error(error);
+        }
     };
 
     const handleDelete = async (id) => {
@@ -58,22 +82,39 @@ const CustomerList = () => {
             )
         ) return;
 
-        await deleteCustomer(id);
+        try {
 
-        loadCustomers();
+            await deleteCustomer(id);
+
+            loadCustomers();
+
+        } catch (error) {
+
+            console.error(error);
+        }
     };
 
     const handleSearch = async () => {
 
-        if (!search) {
-            loadCustomers();
-            return;
+        try {
+
+            if (!search) {
+
+                loadCustomers();
+                return;
+            }
+
+            const response =
+                await searchCustomer(search);
+
+            setCustomers(
+                response.data.data
+            );
+
+        } catch (error) {
+
+            console.error(error);
         }
-
-        const response =
-            await searchCustomer(search);
-
-        setCustomers(response.data.data);
     };
 
     return (
@@ -110,12 +151,12 @@ const CustomerList = () => {
                                 e.target.value
                             )
                         }
-                        className="border p-2"
+                        className="border p-2 rounded"
                     />
 
                     <button
                         onClick={handleSearch}
-                        className="bg-green-600 text-white px-4"
+                        className="bg-green-600 text-white px-4 rounded"
                     >
                         Search
                     </button>
@@ -128,11 +169,25 @@ const CustomerList = () => {
 
                         <tr className="border-b">
 
-                            <th>Name</th>
-                            <th>Mobile</th>
-                            <th>City</th>
-                            <th>Card</th>
-                            <th>Actions</th>
+                            <th className="p-3 text-left">
+                                Name
+                            </th>
+
+                            <th className="p-3 text-left">
+                                Mobile
+                            </th>
+
+                            <th className="p-3 text-left">
+                                City
+                            </th>
+
+                            <th className="p-3 text-left">
+                                Card
+                            </th>
+
+                            <th className="p-3 text-left">
+                                Actions
+                            </th>
 
                         </tr>
 
@@ -147,45 +202,56 @@ const CustomerList = () => {
                                 className="border-b"
                             >
 
-                                <td>
+                                <td className="p-3">
                                     {customer.customer_name}
                                 </td>
 
-                                <td>
+                                <td className="p-3">
                                     {customer.mobile}
                                 </td>
 
-                                <td>
+                                <td className="p-3">
                                     {customer.city}
                                 </td>
 
-                                <td>
+                                <td className="p-3">
                                     {customer.card_type}
                                 </td>
 
-                                <td>
+                                <td className="p-3">
 
-                                    <button
-                                        onClick={() =>
-                                            setEditingCustomer(
-                                                customer
-                                            )
-                                        }
-                                        className="bg-yellow-500 text-white px-2 py-1 mr-2"
-                                    >
-                                        Edit
-                                    </button>
+                                    <div className="flex gap-2">
 
-                                    <button
-                                        onClick={() =>
-                                            handleDelete(
-                                                customer.id
-                                            )
-                                        }
-                                        className="bg-red-600 text-white px-2 py-1"
-                                    >
-                                        Delete
-                                    </button>
+                                        <Link
+                                            to={`/customer-profile/${customer.id}`}
+                                            className="bg-blue-600 text-white px-3 py-1 rounded"
+                                        >
+                                            View
+                                        </Link>
+
+                                        <button
+                                            onClick={() =>
+                                                setEditingCustomer(
+                                                    customer
+                                                )
+                                            }
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Edit
+                                        </button>
+
+                                        <button
+                                            onClick={() =>
+                                                handleDelete(
+                                                    customer.id
+                                                )
+                                            }
+                                            className="bg-red-600 text-white px-3 py-1 rounded"
+                                        >
+                                            Delete
+                                        </button>
+
+                                    </div>
 
                                 </td>
 

@@ -184,7 +184,25 @@ const DashboardLayout = () => {
                                 Followups
                             </Link>
                         </li>
+
+                        <li>
+                            <Link
+                                to="/leads"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Leads
+                            </Link>
+                        </li>
                        
+
+                       <li>
+                            <Link
+                                to="/lead-pipeline"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Lead Pipeline
+                            </Link>
+                        </li>
 
 
                         {user?.role === 'ADMIN' && (

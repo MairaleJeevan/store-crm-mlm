@@ -23,3 +23,12 @@ export const updateCustomer = (id, data) => {
 export const deleteCustomer = (id) => {
     return api.delete(`/customers/${id}`);
 };
+
+export const getCustomerProfile = async (id) => {
+
+    const response = await api.get(
+        `/customer-profile/${id}`
+    );
+
+    return response.data;
+};

@@ -23,6 +23,8 @@ const reportAdvancedRoutes =require('./routes/reportAdvancedRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
 const stockDashboardRoutes = require('./routes/stockDashboardRoutes');
 const followupDashboardRoutes = require('./routes/followupDashboardRoutes');
+const customerProfileRoutes = require('./routes/customerProfileRoutes');
+const leadRoutes = require('./routes/leadRoutes');
 
 
 
@@ -78,12 +80,13 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/leads', leadRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/reports-advanced', reportAdvancedRoutes);
 app.use('/api/vehicles', vehicleRoutes);
 app.use('/api/stock-dashboard',stockDashboardRoutes);
 app.use('/api/followup-dashboard',followupDashboardRoutes);
-
+app.use('/api/customer-profile', customerProfileRoutes);
 
 
 
