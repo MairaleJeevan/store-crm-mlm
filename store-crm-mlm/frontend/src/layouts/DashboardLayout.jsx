@@ -181,7 +181,7 @@ const DashboardLayout = () => {
                                 to="/followup-dashboard"
                                 className="block px-3 py-2 rounded hover:bg-gray-700"
                             >
-                                Followups
+                                Followup Dashboard
                             </Link>
                         </li>
 
@@ -210,6 +210,16 @@ const DashboardLayout = () => {
                                 className="block px-3 py-2 rounded hover:bg-gray-700"
                             >
                                 Sales Targets
+                            </Link>
+                        </li>
+
+
+                        <li>
+                            <Link
+                                to="/followups"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                All Followups
                             </Link>
                         </li>
 

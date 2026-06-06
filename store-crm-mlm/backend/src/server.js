@@ -27,6 +27,8 @@ const customerProfileRoutes = require('./routes/customerProfileRoutes');
 const leadRoutes = require('./routes/leadRoutes');
 const salesTargetRoutes = require('./routes/salesTargetRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const analyticsRoutes = require('./routes/analyticsRoutes' );
+const followupRoutes = require('./routes/followupRoutes');
 
 
 
@@ -91,7 +93,8 @@ app.use('/api/followup-dashboard',followupDashboardRoutes);
 app.use('/api/customer-profile', customerProfileRoutes);
 app.use('/api/sales-targets',salesTargetRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-
+app.use('/api/analytics',analyticsRoutes);
+app.use('/api/followups', followupRoutes);
 
 
 // Root Route

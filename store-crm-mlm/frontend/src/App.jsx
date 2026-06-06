@@ -28,6 +28,7 @@ import CustomerProfile from './pages/customers/CustomerProfile';
 import LeadList from './pages/leads/LeadList';
 import LeadPipeline from './pages/leads/LeadPipeline';
 import SalesTargets from './pages/salesTargets/SalesTargets';
+import FollowupList from './pages/followups/FollowupList';
 
 function App() {
 
@@ -159,6 +160,11 @@ function App() {
                     <Route
                         path="/sales-targets"
                         element={<SalesTargets />}
+                    />
+
+                    <Route
+                        path="/followups"
+                        element={<FollowupList />}
                     />
 
                 </Route>
