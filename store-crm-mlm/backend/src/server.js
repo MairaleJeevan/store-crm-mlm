@@ -18,6 +18,9 @@ const mlmRoutes = require('./routes/mlmRoutes');
 const commissionRoutes = require('./routes/commissionRoutes');
 const exportRoutes = require('./routes/exportRoutes');
 const userRoutes = require('./routes/userRoutes');
+const reminderRoutes = require('./routes/reminderRoutes');
+const reportAdvancedRoutes =require('./routes/reportAdvancedRoutes');
+const vehicleRoutes = require('./routes/vehicleRoutes');
 
 const app = express();
 
@@ -71,7 +74,11 @@ app.use('/api/customers', customerRoutes);
 app.use('/api/sales', saleRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/reminders', reminderRoutes);
+app.use('/api/reports-advanced', reportAdvancedRoutes);
+app.use('/api/vehicles', vehicleRoutes);
 
+console.log('Reminder Route Loaded');
 
 
 // Root Route

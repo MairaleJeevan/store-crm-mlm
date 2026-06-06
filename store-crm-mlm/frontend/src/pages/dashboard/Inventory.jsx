@@ -6,6 +6,10 @@ import {
     getLedger
 } from '../../api/inventoryApi';
 
+import {
+    getProducts
+} from '../../api/productApi';
+
 const Inventory = () => {
 
     const [form, setForm] = useState({
@@ -17,8 +21,14 @@ const Inventory = () => {
     const [ledger, setLedger] =
         useState([]);
 
+    const [products, setProducts] =
+        useState([]);
+
     useEffect(() => {
+
         loadLedger();
+        loadProducts();
+
     }, []);
 
     const loadLedger = async () => {
@@ -36,6 +46,23 @@ const Inventory = () => {
         }
     };
 
+    const loadProducts = async () => {
+
+        try {
+
+            const response =
+                await getProducts();
+
+            setProducts(
+                response.data
+            );
+
+        } catch (error) {
+
+            console.error(error);
+        }
+    };
+
     const handleChange = (e) => {
 
         setForm({
@@ -45,39 +72,56 @@ const Inventory = () => {
         });
     };
 
-    const handleStockIn =
-        async () => {
+    const handleStockIn = async () => {
 
-            try {
+        try {
 
-                await stockIn(form);
+            await stockIn(form);
 
-                alert('Stock Added');
+            alert('Stock Added');
 
-                loadLedger();
+            setForm({
+                product_id: '',
+                quantity: '',
+                remarks: ''
+            });
 
-            } catch (error) {
+            loadLedger();
+            loadProducts();
 
-                console.error(error);
-            }
-        };
+        } catch (error) {
 
-    const handleStockOut =
-        async () => {
+            console.error(error);
+        }
+    };
 
-            try {
+    const handleStockOut = async () => {
 
-                await stockOut(form);
+        try {
 
-                alert('Stock Removed');
+            await stockOut(form);
 
-                loadLedger();
+            alert('Stock Removed');
 
-            } catch (error) {
+            setForm({
+                product_id: '',
+                quantity: '',
+                remarks: ''
+            });
 
-                console.error(error);
-            }
-        };
+            loadLedger();
+            loadProducts();
+
+        } catch (error) {
+
+            console.error(error);
+        }
+    };
+
+    const selectedProduct =
+        products.find(
+            p => p.id === form.product_id
+        );
 
     return (
 
@@ -91,13 +135,29 @@ const Inventory = () => {
 
                 <div className="grid grid-cols-3 gap-4">
 
-                    <input
+                    <select
                         name="product_id"
-                        placeholder="Product ID"
                         value={form.product_id}
                         onChange={handleChange}
                         className="border p-2"
-                    />
+                    >
+
+                        <option value="">
+                            Select Product
+                        </option>
+
+                        {products.map(product => (
+
+                            <option
+                                key={product.id}
+                                value={product.id}
+                            >
+                                {product.product_name}
+                            </option>
+
+                        ))}
+
+                    </select>
 
                     <input
                         name="quantity"
@@ -116,6 +176,22 @@ const Inventory = () => {
                     />
 
                 </div>
+
+                {selectedProduct && (
+
+                    <div className="mt-4 bg-blue-100 p-3 rounded">
+
+                        Current Stock:
+
+                        <span className="font-bold ml-2">
+
+                            {selectedProduct.stock_quantity}
+
+                        </span>
+
+                    </div>
+
+                )}
 
                 <div className="mt-4 flex gap-4">
 

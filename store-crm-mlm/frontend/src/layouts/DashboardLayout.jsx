@@ -32,71 +32,138 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
-                        <li>
-                            <Link
-                                to="/customers"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Customers
-                            </Link>
-                        </li>
+                        {[
+                                'ADMIN',
+                                'MANAGER'
+                            ].includes(user?.role) && (
 
-                        <li>
-                            <Link
-                                to="/products"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Products
-                            </Link>
-                        </li>
+                                <li>
+                                    <Link
+                                        to="/customers"
+                                        className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    >
+                                        Customers
+                                    </Link>
+                                </li>
+
+                        )}
+
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+
+                            <li>
+                                <Link
+                                    to="/products"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Products
+                                </Link>
+                            </li>
+
+                        )}
 
 
-                         <li>
-                            <Link
-                                to="/inventory"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Inventory
-                            </Link>
-                        </li>
+                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
+
+                            <li>
+                                <Link
+                                    to="/inventory"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Inventory
+                                </Link>
+                            </li>
+
+                        )}
                         
 
-                        <li>
-                            <Link
-                                to="/low-stock"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Low Stock
-                            </Link>
-                        </li>
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
 
-                        <li>
-                            <Link
-                                to="/sales"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Sales
-                            </Link>
-                        </li>
+                            <li>
+                                <Link
+                                    to="/low-stock"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Low Stock
+                                </Link>
+                            </li>
 
-                        <li>
-                            <Link
-                                to="/commissions"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Commissions
-                            </Link>
-                        </li>
+                        )}
+
+                        {['ADMIN', 'MANAGER', 'SALES_EXECUTIVE'].includes(user?.role) && (
+
+                            <li>
+                                <Link
+                                    to="/sales"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Sales
+                                </Link>
+                            </li>
+
+                        )}
+
+                        {['ADMIN', 'MLM_USER'].includes(user?.role) && (
+
+                            <li>
+                                <Link
+                                    to="/commissions"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Commissions
+                                </Link>
+                            </li>
+
+                        )}
   
+                        {user?.role === 'ADMIN' && (
+
+                            <li>
+                                <Link
+                                    to="/exports"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Exports
+                                </Link>
+                            </li>
+
+                        )}
+
+
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+
+                            <li>
+                                <Link
+                                    to="/reminders"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Reminders
+                                </Link>
+                            </li>
+
+                        )}
+
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+
+                            <li>
+                                <Link
+                                    to="/reports"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Reports
+                                </Link>
+                            </li>
+
+                        )}
+
+
                         <li>
                             <Link
-                                to="/exports"
+                                to="/vehicles"
                                 className="block px-3 py-2 rounded hover:bg-gray-700"
                             >
-                                Exports
+                                Vehicles
                             </Link>
                         </li>
-
 
                        
 
