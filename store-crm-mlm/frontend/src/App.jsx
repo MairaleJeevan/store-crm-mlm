@@ -6,30 +6,24 @@ import {
 } from 'react-router-dom';
 
 import Login from './pages/auth/Login';
-
 import Dashboard from './pages/dashboard/Dashboard';
 import CustomerList from './pages/customers/CustomerList';
 import SalesList from './pages/sales/SalesList';
 import ProductList from './pages/products/ProductList';
 import LowStock from './pages/products/LowStock';
 import Inventory from './pages/dashboard/Inventory';
-
 import UserManagement from './pages/users/UserManagement';
-
 import MLMTree from './pages/mlm/MLMTree';
-
 import CommissionList from './pages/commissions/CommissionList';
-
 import Exports from './pages/reports/Exports';
 import Reports from './pages/reports/Reports';
-
 import ReminderList from './pages/reminders/ReminderList';
-
 import DashboardLayout from './layouts/DashboardLayout';
-
 import ProtectedRoute from './routes/ProtectedRoute';
 import RoleProtectedRoute from './routes/RoleProtectedRoute';
 import VehicleList from './pages/vehicles/VehicleList';
+import StockDashboard from './pages/dashboard/StockDashboard';
+import FollowupDashboard from './pages/dashboard/FollowupDashboard';
 
 function App() {
 
@@ -131,6 +125,16 @@ function App() {
                     <Route
                         path="/vehicles"
                         element={<VehicleList />}
+                    />
+
+                    <Route
+                        path="/stock-dashboard"
+                        element={<StockDashboard />}
+                    />
+
+                    <Route
+                        path="/followup-dashboard"
+                        element={<FollowupDashboard />}
                     />
 
                 </Route>

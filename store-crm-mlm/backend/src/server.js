@@ -21,6 +21,10 @@ const userRoutes = require('./routes/userRoutes');
 const reminderRoutes = require('./routes/reminderRoutes');
 const reportAdvancedRoutes =require('./routes/reportAdvancedRoutes');
 const vehicleRoutes = require('./routes/vehicleRoutes');
+const stockDashboardRoutes = require('./routes/stockDashboardRoutes');
+const followupDashboardRoutes = require('./routes/followupDashboardRoutes');
+
+
 
 const app = express();
 
@@ -77,8 +81,10 @@ app.use('/api/users', userRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/reports-advanced', reportAdvancedRoutes);
 app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/stock-dashboard',stockDashboardRoutes);
+app.use('/api/followup-dashboard',followupDashboardRoutes);
 
-console.log('Reminder Route Loaded');
+
 
 
 // Root Route
@@ -109,6 +115,9 @@ app.use((err, req, res, next) => {
         message: 'Internal Server Error'
     });
 });
+
+
+
 
 const PORT = process.env.PORT || 5000;
 

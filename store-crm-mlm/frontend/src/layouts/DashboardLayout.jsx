@@ -165,6 +165,25 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
+
+                        <li>
+                            <Link
+                                to="/stock-dashboard"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Stock Dashboard
+                            </Link>
+                        </li>
+
+
+                        <li>
+                            <Link
+                                to="/followup-dashboard"
+                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                            >
+                                Followups
+                            </Link>
+                        </li>
                        
 
 
