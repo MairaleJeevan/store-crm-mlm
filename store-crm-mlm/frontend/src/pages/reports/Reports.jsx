@@ -1,59 +1,29 @@
 import { useEffect, useState } from 'react';
 
 import {
-    getCustomerReport,
-    getSalesReport,
-    getInventoryReport
-}
-from '../../api/reportAdvancedApi';
+    getBusinessReport
+} from '../../api/reportApi';
 
 const Reports = () => {
 
-    const [customers, setCustomers] =
-        useState(0);
-
-    const [sales, setSales] =
-        useState(0);
-
-    const [inventory, setInventory] =
-        useState(0);
-
-    const [totalSales, setTotalSales] =
-        useState(0);
+    const [report, setReport] =
+        useState(null);
 
     useEffect(() => {
 
-        loadReports();
+        loadReport();
 
     }, []);
 
-    const loadReports = async () => {
+    const loadReport = async () => {
 
         try {
 
-            const customerData =
-                await getCustomerReport();
+            const response =
+                await getBusinessReport();
 
-            const salesData =
-                await getSalesReport();
-
-            const inventoryData =
-                await getInventoryReport();
-
-            setCustomers(
-                customerData.count
-            );
-
-            setSales(
-                salesData.count
-            );
-
-            setInventory(
-                inventoryData.count
-            );
-
-            setTotalSales(
-                salesData.totalSales
+            setReport(
+                response.data
             );
 
         } catch (error) {
@@ -70,49 +40,65 @@ const Reports = () => {
                 Reports Dashboard
             </h1>
 
-            <div className="grid grid-cols-4 gap-4">
+            {report && (
 
-                <div className="bg-white p-5 rounded shadow">
+                <>
 
-                    <h3>Total Customers</h3>
+                    <div className="grid grid-cols-4 gap-4 mb-6">
 
-                    <p className="text-3xl font-bold">
-                        {customers}
-                    </p>
+                        <div className="bg-white p-5 rounded shadow">
 
-                </div>
+                            <h3 className="text-gray-500">
+                                Customers
+                            </h3>
 
-                <div className="bg-white p-5 rounded shadow">
+                            <p className="text-4xl font-bold">
+                                {report.customers}
+                            </p>
 
-                    <h3>Total Sales Records</h3>
+                        </div>
 
-                    <p className="text-3xl font-bold">
-                        {sales}
-                    </p>
+                        <div className="bg-white p-5 rounded shadow">
 
-                </div>
+                            <h3 className="text-gray-500">
+                                Vehicles
+                            </h3>
 
-                <div className="bg-white p-5 rounded shadow">
+                            <p className="text-4xl font-bold">
+                                {report.vehicles}
+                            </p>
 
-                    <h3>Total Inventory Logs</h3>
+                        </div>
 
-                    <p className="text-3xl font-bold">
-                        {inventory}
-                    </p>
+                        <div className="bg-white p-5 rounded shadow">
 
-                </div>
+                            <h3 className="text-gray-500">
+                                Inventory Logs
+                            </h3>
 
-                <div className="bg-white p-5 rounded shadow">
+                            <p className="text-4xl font-bold">
+                                {report.inventory}
+                            </p>
 
-                    <h3>Total Revenue</h3>
+                        </div>
 
-                    <p className="text-3xl font-bold">
-                        ₹{totalSales}
-                    </p>
+                        <div className="bg-white p-5 rounded shadow">
 
-                </div>
+                            <h3 className="text-gray-500">
+                                CRM Status
+                            </h3>
 
-            </div>
+                            <p className="text-green-600 text-3xl font-bold">
+                                Active
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </>
+
+            )}
 
         </div>
     );

@@ -19,3 +19,14 @@ export const getDashboardCharts =
 
         return response.data;
     };
+
+export const getBusinessReport =
+async () => {
+
+    const response =
+        await api.get(
+            '/reports/business'
+        );
+
+    return response.data;
+};

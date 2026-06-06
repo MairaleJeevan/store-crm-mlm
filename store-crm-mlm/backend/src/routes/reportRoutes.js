@@ -11,7 +11,8 @@ const {
     getSalesReport,
     getCommissionReport,
     getLowStockReport,
-    getDashboardCharts
+    getDashboardCharts,
+    getBusinessReport
 } = require('../controllers/reportController');
 
 router.use(authMiddleware);
@@ -25,6 +26,8 @@ router.get('/sales', getSalesReport);
 router.get('/commissions', getCommissionReport);
 
 router.get('/low-stock', getLowStockReport);
+
+router.get('/business', getBusinessReport);
 
 router.get(
     '/charts',

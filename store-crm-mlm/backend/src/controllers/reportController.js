@@ -319,12 +319,65 @@ const getDashboardCharts = async (req, res) => {
         });
     }
 };
+const getBusinessReport =
+async (req, res) => {
 
+    try {
+
+        const {
+            count: customerCount
+        } = await supabase
+            .from('customers')
+            .select('*', {
+                count: 'exact',
+                head: true
+            });
+
+        const {
+            count: vehicleCount
+        } = await supabase
+            .from('vehicle_sales')
+            .select('*', {
+                count: 'exact',
+                head: true
+            });
+
+        const {
+            count: inventoryCount
+        } = await supabase
+            .from('inventory_transactions')
+            .select('*', {
+                count: 'exact',
+                head: true
+            });
+
+        return res.json({
+            success: true,
+            data: {
+                customers:
+                    customerCount,
+                vehicles:
+                    vehicleCount,
+                inventory:
+                    inventoryCount
+            }
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            success: false,
+            message:
+                error.message
+        });
+    }
+};
 module.exports = {
     getDashboardSummary,
     getCustomerReport,
     getSalesReport,
     getCommissionReport,
     getLowStockReport,
-    getDashboardCharts
+    getDashboardCharts,
+    getBusinessReport
 };
