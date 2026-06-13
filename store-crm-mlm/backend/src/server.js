@@ -32,6 +32,7 @@ const followupRoutes = require('./routes/followupRoutes');
 
 
 
+
 const app = express();
 
 
@@ -95,6 +96,7 @@ app.use('/api/sales-targets',salesTargetRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/analytics',analyticsRoutes);
 app.use('/api/followups', followupRoutes);
+
 
 
 // Root Route
