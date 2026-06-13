@@ -1,5 +1,26 @@
 import { Link, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import {
+    FaTachometerAlt,
+    FaUsers,
+    FaBox,
+    FaWarehouse,
+    FaChartBar,
+    FaBell,
+    FaFileExport,
+    FaMoneyBillWave,
+    FaProjectDiagram,
+    FaUserCog,
+    FaBullseye,
+    FaClipboardList,
+    FaCar,
+    FaExclamationTriangle,
+    FaShoppingCart,
+    FaBoxes,
+    FaUserTie,
+    FaFilter,
+    FaClipboardCheck
+} from 'react-icons/fa';
 
 const DashboardLayout = () => {
 
@@ -27,8 +48,9 @@ const DashboardLayout = () => {
                         <li>
                             <Link
                                 to="/dashboard"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
+                                className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                             >
+                                <FaTachometerAlt />
                                 Dashboard
                             </Link>
                         </li>
@@ -38,8 +60,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/customers"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaUsers />
                                     Customers
                                 </Link>
                             </li>
@@ -50,8 +73,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/products"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaBox />
                                     Products
                                 </Link>
                             </li>
@@ -62,8 +86,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/inventory"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaWarehouse />
                                     Inventory
                                 </Link>
                             </li>
@@ -74,8 +99,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/low-stock"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaExclamationTriangle />
                                     Low Stock
                                 </Link>
                             </li>
@@ -86,8 +112,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/sales"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaShoppingCart />
                                     Sales
                                 </Link>
                             </li>
@@ -98,8 +125,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/commissions"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaMoneyBillWave />
                                     Commissions
                                 </Link>
                             </li>
@@ -110,8 +138,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/exports"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaFileExport />
                                     Exports
                                 </Link>
                             </li>
@@ -122,8 +151,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/reminders"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaBell />
                                     Reminders
                                 </Link>
                             </li>
@@ -134,8 +164,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/reports"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaChartBar />
                                     Reports
                                 </Link>
                             </li>
@@ -146,8 +177,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/vehicles"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaCar />
                                     Vehicles
                                 </Link>
                             </li>
@@ -158,8 +190,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/stock-dashboard"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaBoxes />
                                     Stock Dashboard
                                 </Link>
                             </li>
@@ -170,8 +203,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/followup-dashboard"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaClipboardList />
                                     Followup Dashboard
                                 </Link>
                             </li>
@@ -182,8 +216,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/leads"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaUserTie />
                                     Leads
                                 </Link>
                             </li>
@@ -194,8 +229,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/lead-pipeline"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaFilter />
                                     Lead Pipeline
                                 </Link>
                             </li>
@@ -206,8 +242,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/sales-targets"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                     <FaBullseye />
                                     Sales Targets
                                 </Link>
                             </li>
@@ -218,8 +255,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/followups"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaClipboardCheck />
                                     All Followups
                                 </Link>
                             </li>
@@ -230,8 +268,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/users"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaUserCog />
                                     User Management
                                 </Link>
                             </li>
@@ -242,8 +281,9 @@ const DashboardLayout = () => {
                             <li>
                                 <Link
                                     to="/mlm-tree"
-                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                    className="flex items-center gap-3 px-3 py-2 rounded hover:bg-blue-600 transition-all duration-200"
                                 >
+                                    <FaProjectDiagram />
                                     MLM Tree
                                 </Link>
                             </li>

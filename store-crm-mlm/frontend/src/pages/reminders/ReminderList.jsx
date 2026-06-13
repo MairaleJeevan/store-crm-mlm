@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import { getReminders } from '../../api/reminderApi';
 
 const ReminderList = () => {
 
     const [reminders, setReminders] =
         useState([]);
+
+    const [loading, setLoading] =
+        useState(false);
 
     useEffect(() => {
 
@@ -16,6 +21,8 @@ const ReminderList = () => {
 
         try {
 
+            setLoading(true);
+
             const response =
                 await getReminders();
 
@@ -25,7 +32,15 @@ const ReminderList = () => {
 
         } catch (error) {
 
+            toast.error(
+                'Failed To Load Reminders'
+            );
+
             console.error(error);
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
@@ -37,16 +52,39 @@ const ReminderList = () => {
                 Reminders
             </h1>
 
+            <div className="bg-yellow-100 text-yellow-700 border border-yellow-300 p-3 rounded mb-4 font-semibold">
+                🔔 Upcoming Reminders
+            </div>
+
+            {
+                loading && (
+                    <div className="text-center p-4 text-blue-600 font-semibold">
+                        Loading Reminders...
+                    </div>
+                )
+            }
+
             <table className="w-full bg-white shadow">
 
                 <thead>
 
-                    <tr>
+                    <tr className="bg-gray-100">
 
-                        <th className="p-3">Title</th>
-                        <th className="p-3">Date</th>
-                        <th className="p-3">Status</th>
-                        <th className="p-3">Remarks</th>
+                        <th className="p-3">
+                            Title
+                        </th>
+
+                        <th className="p-3">
+                            Date
+                        </th>
+
+                        <th className="p-3">
+                            Status
+                        </th>
+
+                        <th className="p-3">
+                            Remarks
+                        </th>
 
                     </tr>
 
@@ -56,7 +94,10 @@ const ReminderList = () => {
 
                     {reminders.map(item => (
 
-                        <tr key={item.id}>
+                        <tr
+                            key={item.id}
+                            className="border-b"
+                        >
 
                             <td className="p-3">
                                 {item.title}
@@ -66,7 +107,13 @@ const ReminderList = () => {
                                 {item.reminder_date}
                             </td>
 
-                            <td className="p-3">
+                            <td
+                                className={`p-3 font-bold ${
+                                    item.status === 'COMPLETED'
+                                        ? 'text-green-600'
+                                        : 'text-orange-500'
+                                }`}
+                            >
                                 {item.status}
                             </td>
 

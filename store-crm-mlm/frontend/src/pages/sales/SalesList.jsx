@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 import {
     searchCustomer
@@ -18,12 +19,14 @@ const SalesList = () => {
     const [customer, setCustomer] =
         useState(null);
 
-    const [message, setMessage] =
-        useState('');
+    const [loading, setLoading] =
+        useState(false);
 
     const handleSearch = async () => {
 
         try {
+
+            setLoading(true);
 
             const response =
                 await searchCustomer(mobile);
@@ -31,16 +34,35 @@ const SalesList = () => {
             if (
                 response.data.data.length
             ) {
+
                 setCustomer(
                     response.data.data[0]
                 );
+
+                toast.success(
+                    'Customer Found'
+                );
+
             } else {
+
                 setCustomer(null);
+
+                toast.warning(
+                    'Customer Not Found'
+                );
             }
 
-        } catch {
+        } catch (error) {
 
             setCustomer(null);
+
+            toast.error(
+                'Failed To Search Customer'
+            );
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
@@ -50,19 +72,29 @@ const SalesList = () => {
 
         try {
 
+            setLoading(true);
+
             await createSale(
                 saleData
             );
 
-            setMessage(
+            toast.success(
                 'Sale Created Successfully'
             );
 
+            setCustomer(null);
+            setMobile('');
+
         } catch (error) {
 
-            setMessage(
-                error?.response?.data?.message
+            toast.error(
+                error?.response?.data?.message ||
+                'Failed To Create Sale'
             );
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
@@ -86,12 +118,12 @@ const SalesList = () => {
                                 e.target.value
                             )
                         }
-                        className="border p-2"
+                        className="border p-2 rounded w-full"
                     />
 
                     <button
                         onClick={handleSearch}
-                        className="bg-green-600 text-white px-4"
+                        className="bg-green-600 text-white px-4 rounded"
                     >
                         Search Customer
                     </button>
@@ -100,26 +132,34 @@ const SalesList = () => {
 
             </div>
 
+            {
+                loading && (
+                    <div className="text-center p-4 text-blue-600 font-semibold">
+                        Loading...
+                    </div>
+                )
+            }
+
             {customer && (
 
-                <div className="bg-blue-100 p-4 rounded mb-4">
+                <div className="bg-blue-100 border border-blue-300 p-4 rounded mb-4">
 
-                    <h2 className="font-bold">
+                    <h2 className="font-bold text-lg mb-2">
                         Customer Found
                     </h2>
 
                     <p>
-                        Name:
+                        <strong>Name:</strong>{' '}
                         {customer.customer_name}
                     </p>
 
                     <p>
-                        Mobile:
+                        <strong>Mobile:</strong>{' '}
                         {customer.mobile}
                     </p>
 
                     <p>
-                        Card:
+                        <strong>Card:</strong>{' '}
                         {customer.card_type}
                     </p>
 
@@ -140,18 +180,7 @@ const SalesList = () => {
 
             )}
 
-            {message && (
-
-                <div className="mt-4 bg-green-100 p-3 rounded">
-
-                    {message}
-
-                </div>
-
-            )}
-
         </div>
-
     );
 };
 

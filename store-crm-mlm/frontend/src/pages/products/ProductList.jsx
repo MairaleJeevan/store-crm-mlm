@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
 import { getProducts } from '../../api/productApi';
 import ProductForm from '../../components/ProductForm';
 
@@ -6,6 +8,9 @@ const ProductList = () => {
 
     const [products, setProducts] =
         useState([]);
+
+    const [loading, setLoading] =
+        useState(false);
 
     useEffect(() => {
         loadProducts();
@@ -15,6 +20,8 @@ const ProductList = () => {
 
         try {
 
+            setLoading(true);
+
             const response =
                 await getProducts();
 
@@ -22,7 +29,15 @@ const ProductList = () => {
 
         } catch (error) {
 
+            toast.error(
+                'Failed To Load Products'
+            );
+
             console.error(error);
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
@@ -35,8 +50,22 @@ const ProductList = () => {
             </h1>
 
             <ProductForm
-                onSuccess={loadProducts}
+                onSuccess={() => {
+                    toast.success(
+                        'Product Saved Successfully'
+                    );
+
+                    loadProducts();
+                }}
             />
+
+            {
+                loading && (
+                    <div className="text-center p-4 text-blue-600 font-semibold">
+                        Loading Products...
+                    </div>
+                )
+            }
 
             <table className="w-full bg-white shadow">
 
@@ -77,7 +106,15 @@ const ProductList = () => {
                                 ₹{product.price}
                             </td>
 
-                            <td className="p-3">
+                            <td
+                                className={`p-3 font-semibold ${
+                                    product.stock_quantity <= 20
+                                        ? 'text-red-600'
+                                        : product.stock_quantity <= 50
+                                        ? 'text-orange-500'
+                                        : 'text-green-600'
+                                }`}
+                            >
                                 {product.stock_quantity}
                             </td>
 
@@ -90,7 +127,6 @@ const ProductList = () => {
             </table>
 
         </div>
-
     );
 };
 

@@ -1,27 +1,30 @@
 import React from 'react';
-
 import ReactDOM from 'react-dom/client';
 
-import App from './App';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+import App from './App';
 import './index.css';
 
-import {
-    AuthProvider
-} from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 
 ReactDOM.createRoot(
-    document.getElementById('root')
+  document.getElementById('root')
 ).render(
+  <React.StrictMode>
+    <AuthProvider>
+      <App />
 
-    <React.StrictMode>
-
-        <AuthProvider>
-
-            <App />
-
-        </AuthProvider>
-
-    </React.StrictMode>
-
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+        theme="colored"
+      />
+    </AuthProvider>
+  </React.StrictMode>
 );

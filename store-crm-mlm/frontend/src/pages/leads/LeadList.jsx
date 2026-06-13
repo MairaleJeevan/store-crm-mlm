@@ -1,16 +1,24 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import {
+    FaUserTie
+} from 'react-icons/fa';
 
 import {
     getLeads,
     createLead,
     convertLead,
-    updateLeadStatus,
-   } from '../../api/leadApi';
+    updateLeadStatus
+} from '../../api/leadApi';
 
 const LeadList = () => {
 
     const [leads, setLeads] =
         useState([]);
+
+    const [loading, setLoading] =
+        useState(false);
 
     const [formData, setFormData] =
         useState({
@@ -26,39 +34,80 @@ const LeadList = () => {
 
     }, []);
 
-   const loadLeads = async () => {
+    const loadLeads = async () => {
 
-        const response =
-            await getLeads();
+        try {
 
-        console.log(response.data[0]);
+            setLoading(true);
 
-        setLeads(
-            response.data || []
-        );
+            const response =
+                await getLeads();
+
+            setLeads(
+                response.data || []
+            );
+
+        } catch (error) {
+
+            toast.error(
+                'Failed To Load Leads'
+            );
+
+            console.error(error);
+
+        } finally {
+
+            setLoading(false);
+        }
     };
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
-        await createLead(formData);
+        try {
 
-        setFormData({
-            lead_name: '',
-            mobile: '',
-            source: '',
-            remarks: ''
-        });
+            await createLead(formData);
 
-        loadLeads();
+            toast.success(
+                'Lead Created Successfully'
+            );
+
+            setFormData({
+                lead_name: '',
+                mobile: '',
+                source: '',
+                remarks: ''
+            });
+
+            loadLeads();
+
+        } catch (error) {
+
+            toast.error(
+                'Failed To Create Lead'
+            );
+        }
     };
 
     const handleConvert = async (id) => {
 
-        await convertLead(id);
+        try {
 
-        loadLeads();
+            await convertLead(id);
+
+            toast.success(
+                'Lead Converted Successfully'
+            );
+
+            loadLeads();
+
+        } catch (error) {
+
+            toast.error(
+                'Failed To Convert Lead'
+            );
+        }
     };
 
     const handleStatus = async (
@@ -66,29 +115,50 @@ const LeadList = () => {
         status
     ) => {
 
-        await updateLeadStatus(
-            id,
-            status
-        );
+        try {
 
-        loadLeads();
+            await updateLeadStatus(
+                id,
+                status
+            );
+
+            toast.success(
+                `Lead Marked As ${status}`
+            );
+
+            loadLeads();
+
+        } catch (error) {
+
+            toast.error(
+                'Failed To Update Lead'
+            );
+        }
     };
 
-  
     return (
 
-        <div>
+        <div className="space-y-6">
 
-            <h1 className="text-3xl font-bold mb-6">
-                Lead Management
-            </h1>
+            <div className="flex items-center gap-3">
+
+                <FaUserTie
+                    className="text-blue-600"
+                    size={30}
+                />
+
+                <h1 className="text-3xl font-bold">
+                    Lead Management
+                </h1>
+
+            </div>
 
             <form
                 onSubmit={handleSubmit}
-                className="bg-white p-4 rounded shadow mb-6"
+                className="bg-white p-6 rounded-xl shadow"
             >
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     <input
                         placeholder="Lead Name"
@@ -100,7 +170,7 @@ const LeadList = () => {
                                     e.target.value
                             })
                         }
-                        className="border p-3"
+                        className="border p-3 rounded"
                     />
 
                     <input
@@ -113,7 +183,7 @@ const LeadList = () => {
                                     e.target.value
                             })
                         }
-                        className="border p-3"
+                        className="border p-3 rounded"
                     />
 
                     <input
@@ -126,7 +196,7 @@ const LeadList = () => {
                                     e.target.value
                             })
                         }
-                        className="border p-3"
+                        className="border p-3 rounded"
                     />
 
                     <input
@@ -139,7 +209,7 @@ const LeadList = () => {
                                     e.target.value
                             })
                         }
-                        className="border p-3"
+                        className="border p-3 rounded"
                     />
 
                 </div>
@@ -153,19 +223,43 @@ const LeadList = () => {
 
             </form>
 
-            <div className="bg-white p-4 rounded shadow">
+            {
+                loading && (
+
+                    <div className="bg-blue-50 text-blue-600 p-3 rounded">
+                        Loading Leads...
+                    </div>
+
+                )
+            }
+
+            <div className="bg-white rounded-xl shadow overflow-hidden">
 
                 <table className="w-full">
 
                     <thead>
 
-                        <tr>
+                        <tr className="bg-gray-100">
 
-                            <th>Name</th>
-                            <th>Mobile</th>
-                            <th>Source</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th className="p-4 text-left">
+                                Name
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Mobile
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Source
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Status
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Actions
+                            </th>
 
                         </tr>
 
@@ -173,93 +267,125 @@ const LeadList = () => {
 
                     <tbody>
 
-                        {(leads || []).map((lead) => (
+                        {
+                            leads.length === 0 ? (
 
-                            <tr
-                                key={lead.id}
-                                className="border-b"
-                            >
+                                <tr>
 
-                                <td>
-                                    {lead.lead_name}
-                                </td>
+                                    <td
+                                        colSpan="5"
+                                        className="text-center p-6 text-gray-500"
+                                    >
+                                        No Leads Found
+                                    </td>
 
-                                <td>
-                                    {lead.mobile}
-                                </td>
+                                </tr>
 
-                                <td>
-                                    {lead.source}
-                                </td>
+                            ) : (
 
-                                <td>
-                                    {lead.status}
-                                </td>
+                                leads.map((lead) => (
 
-                                <td>
+                                    <tr
+                                        key={lead.id}
+                                        className="border-t hover:bg-gray-50"
+                                    >
 
-                                    <div className="flex gap-2 flex-wrap">
+                                        <td className="p-4">
+                                            {lead.lead_name}
+                                        </td>
 
-                                        <button
-                                            onClick={() =>
-                                                handleStatus(
-                                                    lead.id,
-                                                    'CONTACTED'
-                                                )
-                                            }
-                                            className="bg-blue-500 text-white px-2 py-1 rounded"
-                                        >
-                                            Contacted
-                                        </button>
+                                        <td className="p-4">
+                                            {lead.mobile}
+                                        </td>
 
-                                        <button
-                                            onClick={() =>
-                                                handleStatus(
-                                                    lead.id,
-                                                    'INTERESTED'
-                                                )
-                                            }
-                                            className="bg-yellow-500 text-white px-2 py-1 rounded"
-                                        >
-                                            Interested
-                                        </button>
+                                        <td className="p-4">
+                                            {lead.source}
+                                        </td>
 
-                                        <button
-                                            onClick={() =>
-                                                handleStatus(
-                                                    lead.id,
-                                                    'FOLLOWUP'
-                                                )
-                                            }
-                                            className="bg-purple-500 text-white px-2 py-1 rounded"
-                                        >
-                                            Followup
-                                        </button>
+                                        <td className="p-4">
 
-                                        {lead.status !==
-                                            'CONVERTED' && (
+                                            <span
+                                                className={
+                                                    lead.status === 'CONVERTED'
+                                                        ? 'text-green-600 font-semibold'
+                                                        : lead.status === 'INTERESTED'
+                                                        ? 'text-yellow-600 font-semibold'
+                                                        : lead.status === 'FOLLOWUP'
+                                                        ? 'text-purple-600 font-semibold'
+                                                        : 'text-blue-600 font-semibold'
+                                                }
+                                            >
+                                                {lead.status}
+                                            </span>
 
-                                            <button
-                                                onClick={() =>
-                                                    handleConvert(
-                                                        lead.id
+                                        </td>
+
+                                        <td className="p-4">
+
+                                            <div className="flex gap-2 flex-wrap">
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleStatus(
+                                                            lead.id,
+                                                            'CONTACTED'
+                                                        )
+                                                    }
+                                                    className="bg-blue-500 text-white px-2 py-1 rounded"
+                                                >
+                                                    Contacted
+                                                </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleStatus(
+                                                            lead.id,
+                                                            'INTERESTED'
+                                                        )
+                                                    }
+                                                    className="bg-yellow-500 text-white px-2 py-1 rounded"
+                                                >
+                                                    Interested
+                                                </button>
+
+                                                <button
+                                                    onClick={() =>
+                                                        handleStatus(
+                                                            lead.id,
+                                                            'FOLLOWUP'
+                                                        )
+                                                    }
+                                                    className="bg-purple-500 text-white px-2 py-1 rounded"
+                                                >
+                                                    Followup
+                                                </button>
+
+                                                {
+                                                    lead.status !== 'CONVERTED' && (
+
+                                                        <button
+                                                            onClick={() =>
+                                                                handleConvert(
+                                                                    lead.id
+                                                                )
+                                                            }
+                                                            className="bg-green-600 text-white px-2 py-1 rounded"
+                                                        >
+                                                            Convert
+                                                        </button>
+
                                                     )
                                                 }
-                                                className="bg-green-600 text-white px-2 py-1 rounded"
-                                            >
-                                                Convert
-                                            </button>
 
-                                        )}
-                                        <th>Action</th>
+                                            </div>
 
-                                    </div>
+                                        </td>
 
-                                </td>
+                                    </tr>
 
-                            </tr>
-
-                        ))}
+                                ))
+                            )
+                        }
 
                     </tbody>
 

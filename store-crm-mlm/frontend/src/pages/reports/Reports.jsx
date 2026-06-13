@@ -1,4 +1,14 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import {
+    FaUsers,
+    FaCar,
+    FaWarehouse,
+    FaCheckCircle,
+    FaFileExport,
+    FaRupeeSign
+} from 'react-icons/fa';
 
 import {
     getBusinessReport,
@@ -13,6 +23,9 @@ const Reports = () => {
     const [sales, setSales] =
         useState([]);
 
+    const [loading, setLoading] =
+        useState(false);
+
     useEffect(() => {
 
         loadReport();
@@ -24,16 +37,24 @@ const Reports = () => {
 
         try {
 
+            setLoading(true);
+
             const response =
                 await getBusinessReport();
 
-            setReport(
-                response
-            );
+            setReport(response);
 
         } catch (error) {
 
+            toast.error(
+                'Failed To Load Report'
+            );
+
             console.error(error);
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
@@ -45,10 +66,14 @@ const Reports = () => {
                 await getSalesReport();
 
             setSales(
-                response.data
+                response.data || []
             );
 
         } catch (error) {
+
+            toast.error(
+                'Failed To Load Sales Report'
+            );
 
             console.error(error);
         }
@@ -56,13 +81,12 @@ const Reports = () => {
 
     const exportCSV = () => {
 
-        const headers =
-            [
-                'Date',
-                'Vehicle',
-                'Sale Type',
-                'Amount'
-            ];
+        const headers = [
+            'Date',
+            'Vehicle',
+            'Sale Type',
+            'Amount'
+        ];
 
         const rows =
             sales.map(item => [
@@ -113,135 +137,165 @@ const Reports = () => {
             'sales-report.csv';
 
         link.click();
+
+        toast.success(
+            'CSV Exported Successfully'
+        );
     };
 
     const totalSales =
         sales.reduce(
-            (
-                sum,
-                item
-            ) =>
+            (sum, item) =>
                 sum +
-                Number(
-                    item.amount
-                ),
+                Number(item.amount),
             0
         );
 
     return (
 
-        <div>
+        <div className="space-y-6">
 
-            <h1 className="text-3xl font-bold mb-6">
+            <h1 className="text-3xl font-bold">
                 Reports Dashboard
             </h1>
 
-            {report && (
+            {
+                loading && (
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div className="bg-blue-50 text-blue-600 p-3 rounded">
+                        Loading Reports...
+                    </div>
 
-                    <div className="bg-white p-5 rounded shadow">
+                )
+            }
 
-                        <h3 className="text-gray-500">
-                            Customers
-                        </h3>
+            {
+                report && (
 
-                        <p className="text-4xl font-bold">
-                            {report.customers}
-                        </p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+                        <div className="bg-blue-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+                            <FaUsers size={35} />
+
+                            <h3 className="mt-3">
+                                Customers
+                            </h3>
+
+                            <h2 className="text-4xl font-bold">
+                                {report.customers}
+                            </h2>
+
+                        </div>
+
+                        <div className="bg-purple-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+                            <FaCar size={35} />
+
+                            <h3 className="mt-3">
+                                Vehicles
+                            </h3>
+
+                            <h2 className="text-4xl font-bold">
+                                {report.vehicles}
+                            </h2>
+
+                        </div>
+
+                        <div className="bg-orange-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+                            <FaWarehouse size={35} />
+
+                            <h3 className="mt-3">
+                                Inventory Logs
+                            </h3>
+
+                            <h2 className="text-4xl font-bold">
+                                {report.inventory}
+                            </h2>
+
+                        </div>
+
+                        <div className="bg-green-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+                            <FaCheckCircle size={35} />
+
+                            <h3 className="mt-3">
+                                CRM Status
+                            </h3>
+
+                            <h2 className="text-3xl font-bold">
+                                Active
+                            </h2>
+
+                        </div>
 
                     </div>
 
-                    <div className="bg-white p-5 rounded shadow">
+                )
+            }
 
-                        <h3 className="text-gray-500">
-                            Vehicles
-                        </h3>
+            <div className="bg-white rounded-xl shadow overflow-hidden">
 
-                        <p className="text-4xl font-bold">
-                            {report.vehicles}
-                        </p>
+                <div className="p-6 border-b">
 
-                    </div>
+                    <div className="flex justify-between items-center">
 
-                    <div className="bg-white p-5 rounded shadow">
+                        <h2 className="text-2xl font-bold">
+                            Sales Report
+                        </h2>
 
-                        <h3 className="text-gray-500">
-                            Inventory Logs
-                        </h3>
-
-                        <p className="text-4xl font-bold">
-                            {report.inventory}
-                        </p>
-
-                    </div>
-
-                    <div className="bg-white p-5 rounded shadow">
-
-                        <h3 className="text-gray-500">
-                            CRM Status
-                        </h3>
-
-                        <p className="text-green-600 text-3xl font-bold">
-                            Active
-                        </p>
+                        <button
+                            onClick={exportCSV}
+                            className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2"
+                        >
+                            <FaFileExport />
+                            Export CSV
+                        </button>
 
                     </div>
 
-                </div>
+                    <div className="mt-4 flex items-center gap-2">
 
-            )}
+                        <FaRupeeSign
+                            className="text-green-600"
+                        />
 
-            <div className="bg-white p-6 rounded shadow">
+                        <span className="font-bold">
+                            Total Sales:
+                        </span>
 
-                <div className="flex justify-between items-center mb-4">
+                        <span className="text-green-600 font-bold text-lg">
+                            ₹{Number(
+                                totalSales
+                            ).toLocaleString()}
+                        </span>
 
-                    <h2 className="text-2xl font-bold">
-                        Sales Report
-                    </h2>
-
-                    <button
-                        onClick={exportCSV}
-                        className="bg-green-600 text-white px-4 py-2 rounded"
-                    >
-                        Export CSV
-                    </button>
-
-                </div>
-
-                <div className="mb-4">
-
-                    <span className="font-bold text-lg">
-                        Total Sales:
-                    </span>
-
-                    <span className="ml-2 text-green-600 font-bold">
-                        ₹{totalSales}
-                    </span>
+                    </div>
 
                 </div>
 
                 <div className="overflow-x-auto">
 
-                    <table className="min-w-full border">
+                    <table className="w-full">
 
                         <thead>
 
                             <tr className="bg-gray-100">
 
-                                <th className="border p-3 text-left">
+                                <th className="p-4 text-left">
                                     Date
                                 </th>
 
-                                <th className="border p-3 text-left">
+                                <th className="p-4 text-left">
                                     Vehicle
                                 </th>
 
-                                <th className="border p-3 text-left">
+                                <th className="p-4 text-left">
                                     Sale Type
                                 </th>
 
-                                <th className="border p-3 text-left">
+                                <th className="p-4 text-left">
                                     Amount
                                 </th>
 
@@ -251,44 +305,58 @@ const Reports = () => {
 
                         <tbody>
 
-                            {sales.map(item => (
+                            {
+                                sales.length === 0 ? (
 
-                                <tr
-                                    key={item.id}
-                                >
+                                    <tr>
 
-                                    <td className="border p-3">
+                                        <td
+                                            colSpan="4"
+                                            className="text-center p-6 text-gray-500"
+                                        >
+                                            No Sales Records Found
+                                        </td>
 
-                                        {
-                                            new Date(
-                                                item.created_at
-                                            ).toLocaleDateString()
-                                        }
+                                    </tr>
 
-                                    </td>
+                                ) : (
 
-                                    <td className="border p-3">
-                                        {
-                                            item.vehicle_number
-                                        }
-                                    </td>
+                                    sales.map(item => (
 
-                                    <td className="border p-3">
-                                        {
-                                            item.sale_type
-                                        }
-                                    </td>
+                                        <tr
+                                            key={item.id}
+                                            className="border-t hover:bg-gray-50"
+                                        >
 
-                                    <td className="border p-3 font-semibold text-green-600">
-                                        ₹
-                                        {
-                                            item.amount
-                                        }
-                                    </td>
+                                            <td className="p-4">
 
-                                </tr>
+                                                {
+                                                    new Date(
+                                                        item.created_at
+                                                    ).toLocaleDateString()
+                                                }
 
-                            ))}
+                                            </td>
+
+                                            <td className="p-4">
+                                                {item.vehicle_number}
+                                            </td>
+
+                                            <td className="p-4">
+                                                {item.sale_type}
+                                            </td>
+
+                                            <td className="p-4 text-green-600 font-semibold">
+                                                ₹{Number(
+                                                    item.amount
+                                                ).toLocaleString()}
+                                            </td>
+
+                                        </tr>
+
+                                    ))
+                                )
+                            }
 
                         </tbody>
 

@@ -1,4 +1,11 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import {
+    FaWarehouse,
+    FaArrowDown,
+    FaArrowUp
+} from 'react-icons/fa';
 
 import {
     stockIn,
@@ -24,6 +31,9 @@ const Inventory = () => {
     const [products, setProducts] =
         useState([]);
 
+    const [loading, setLoading] =
+        useState(false);
+
     useEffect(() => {
 
         loadLedger();
@@ -35,14 +45,24 @@ const Inventory = () => {
 
         try {
 
+            setLoading(true);
+
             const response =
                 await getLedger();
 
-            setLedger(response.data);
+            setLedger(
+                response.data || []
+            );
 
         } catch (error) {
 
-            console.error(error);
+            toast.error(
+                'Failed To Load Inventory Ledger'
+            );
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
@@ -54,12 +74,14 @@ const Inventory = () => {
                 await getProducts();
 
             setProducts(
-                response.data
+                response.data || []
             );
 
         } catch (error) {
 
-            console.error(error);
+            toast.error(
+                'Failed To Load Products'
+            );
         }
     };
 
@@ -72,26 +94,36 @@ const Inventory = () => {
         });
     };
 
+    const resetForm = () => {
+
+        setForm({
+            product_id: '',
+            quantity: '',
+            remarks: ''
+        });
+    };
+
     const handleStockIn = async () => {
 
         try {
 
             await stockIn(form);
 
-            alert('Stock Added');
+            toast.success(
+                'Stock Added Successfully'
+            );
 
-            setForm({
-                product_id: '',
-                quantity: '',
-                remarks: ''
-            });
+            resetForm();
 
             loadLedger();
             loadProducts();
 
         } catch (error) {
 
-            console.error(error);
+            toast.error(
+                error?.response?.data?.message ||
+                'Stock In Failed'
+            );
         }
     };
 
@@ -101,20 +133,21 @@ const Inventory = () => {
 
             await stockOut(form);
 
-            alert('Stock Removed');
+            toast.success(
+                'Stock Removed Successfully'
+            );
 
-            setForm({
-                product_id: '',
-                quantity: '',
-                remarks: ''
-            });
+            resetForm();
 
             loadLedger();
             loadProducts();
 
         } catch (error) {
 
-            console.error(error);
+            toast.error(
+                error?.response?.data?.message ||
+                'Stock Out Failed'
+            );
         }
     };
 
@@ -125,21 +158,30 @@ const Inventory = () => {
 
     return (
 
-        <div>
+        <div className="space-y-6">
 
-            <h1 className="text-3xl font-bold mb-6">
-                Inventory
-            </h1>
+            <div className="flex items-center gap-3">
 
-            <div className="bg-white p-5 rounded shadow mb-6">
+                <FaWarehouse
+                    className="text-blue-600"
+                    size={30}
+                />
 
-                <div className="grid grid-cols-3 gap-4">
+                <h1 className="text-3xl font-bold">
+                    Inventory Management
+                </h1>
+
+            </div>
+
+            <div className="bg-white p-6 rounded-xl shadow">
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                     <select
                         name="product_id"
                         value={form.product_id}
                         onChange={handleChange}
-                        className="border p-2"
+                        className="border p-3 rounded"
                     >
 
                         <option value="">
@@ -164,7 +206,7 @@ const Inventory = () => {
                         placeholder="Quantity"
                         value={form.quantity}
                         onChange={handleChange}
-                        className="border p-2"
+                        className="border p-3 rounded"
                     />
 
                     <input
@@ -172,14 +214,14 @@ const Inventory = () => {
                         placeholder="Remarks"
                         value={form.remarks}
                         onChange={handleChange}
-                        className="border p-2"
+                        className="border p-3 rounded"
                     />
 
                 </div>
 
                 {selectedProduct && (
 
-                    <div className="mt-4 bg-blue-100 p-3 rounded">
+                    <div className="mt-4 bg-blue-50 text-blue-700 p-3 rounded">
 
                         Current Stock:
 
@@ -197,15 +239,17 @@ const Inventory = () => {
 
                     <button
                         onClick={handleStockIn}
-                        className="bg-green-600 text-white px-4 py-2 rounded"
+                        className="bg-green-600 text-white px-4 py-2 rounded flex items-center gap-2"
                     >
+                        <FaArrowDown />
                         Stock In
                     </button>
 
                     <button
                         onClick={handleStockOut}
-                        className="bg-red-600 text-white px-4 py-2 rounded"
+                        className="bg-red-600 text-white px-4 py-2 rounded flex items-center gap-2"
                     >
+                        <FaArrowUp />
                         Stock Out
                     </button>
 
@@ -213,69 +257,112 @@ const Inventory = () => {
 
             </div>
 
-            <table className="w-full bg-white shadow">
+            {loading && (
 
-                <thead>
+                <div className="bg-blue-50 text-blue-600 p-3 rounded">
+                    Loading Inventory Ledger...
+                </div>
 
-                    <tr>
+            )}
 
-                        <th className="p-3">
-                            Type
-                        </th>
+            <div className="bg-white rounded-xl shadow overflow-hidden">
 
-                        <th className="p-3">
-                            Qty
-                        </th>
+                <table className="w-full">
 
-                        <th className="p-3">
-                            Before
-                        </th>
+                    <thead>
 
-                        <th className="p-3">
-                            After
-                        </th>
+                        <tr className="bg-gray-100">
 
-                        <th className="p-3">
-                            Remarks
-                        </th>
+                            <th className="p-4 text-left">
+                                Type
+                            </th>
 
-                    </tr>
+                            <th className="p-4 text-left">
+                                Quantity
+                            </th>
 
-                </thead>
+                            <th className="p-4 text-left">
+                                Before
+                            </th>
 
-                <tbody>
+                            <th className="p-4 text-left">
+                                After
+                            </th>
 
-                    {ledger.map(item => (
-
-                        <tr key={item.id}>
-
-                            <td className="p-3">
-                                {item.transaction_type}
-                            </td>
-
-                            <td className="p-3">
-                                {item.quantity}
-                            </td>
-
-                            <td className="p-3">
-                                {item.stock_before}
-                            </td>
-
-                            <td className="p-3">
-                                {item.stock_after}
-                            </td>
-
-                            <td className="p-3">
-                                {item.remarks}
-                            </td>
+                            <th className="p-4 text-left">
+                                Remarks
+                            </th>
 
                         </tr>
 
-                    ))}
+                    </thead>
 
-                </tbody>
+                    <tbody>
 
-            </table>
+                        {
+                            ledger.length === 0 ? (
+
+                                <tr>
+
+                                    <td
+                                        colSpan="5"
+                                        className="text-center p-6 text-gray-500"
+                                    >
+                                        No Inventory Records Found
+                                    </td>
+
+                                </tr>
+
+                            ) : (
+
+                                ledger.map(item => (
+
+                                    <tr
+                                        key={item.id}
+                                        className="border-t hover:bg-gray-50"
+                                    >
+
+                                        <td className="p-4">
+
+                                            <span
+                                                className={
+                                                    item.transaction_type === 'STOCK_IN'
+                                                        ? 'text-green-600 font-semibold'
+                                                        : 'text-red-600 font-semibold'
+                                                }
+                                            >
+                                                {item.transaction_type}
+                                            </span>
+
+                                        </td>
+
+                                        <td className="p-4">
+                                            {item.quantity}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {item.stock_before}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {item.stock_after}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {item.remarks}
+                                        </td>
+
+                                    </tr>
+
+                                ))
+                            )
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
     );

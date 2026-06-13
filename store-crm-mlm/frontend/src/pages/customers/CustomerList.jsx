@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import CustomerForm from '../../components/CustomerForm';
 
@@ -20,20 +21,31 @@ const CustomerList = () => {
     const [editingCustomer, setEditingCustomer] =
         useState(null);
 
-    const loadCustomers = async () => {
+    const [loading, setLoading] =
+    useState(false);
 
-        try {
+   const loadCustomers = async () => {
 
-            const response =
-                await getCustomers();
+    try {
 
-            setCustomers(response.data.data);
+        setLoading(true);
 
-        } catch (error) {
+        const response =
+            await getCustomers();
 
-            console.error(error);
-        }
-    };
+        setCustomers(response.data.data);
+
+    } catch (error) {
+
+        toast.error(
+            'Failed To Load Customers'
+        );
+
+    } finally {
+
+        setLoading(false);
+    }
+};
 
     useEffect(() => {
 
@@ -43,79 +55,115 @@ const CustomerList = () => {
 
     const handleCreate = async (data) => {
 
-        try {
+    try {
 
-            await createCustomer(data);
+        await createCustomer(data);
 
-            loadCustomers();
+        toast.success(
+            'Customer Created Successfully'
+        );
 
-        } catch (error) {
+        loadCustomers();
 
-            console.error(error);
-        }
-    };
+    } catch (error) {
 
-    const handleUpdate = async (data) => {
+        toast.error(
+            error.response?.data?.message ||
+            'Failed To Create Customer'
+        );
 
-        try {
+        console.error(error);
+    }
+};
 
-            await updateCustomer(
-                editingCustomer.id,
-                data
-            );
+   const handleUpdate = async (data) => {
 
-            setEditingCustomer(null);
+    try {
 
-            loadCustomers();
+        await updateCustomer(
+            editingCustomer.id,
+            data
+        );
 
-        } catch (error) {
+        toast.success(
+            'Customer Updated Successfully'
+        );
 
-            console.error(error);
-        }
-    };
+        setEditingCustomer(null);
+
+        loadCustomers();
+
+    } catch (error) {
+
+        toast.error(
+            error.response?.data?.message ||
+            'Failed To Update Customer'
+        );
+
+        console.error(error);
+    }
+};
 
     const handleDelete = async (id) => {
 
-        if (
-            !window.confirm(
-                'Delete customer?'
-            )
-        ) return;
+    if (
+        !window.confirm(
+            'Delete customer?'
+        )
+    ) return;
 
-        try {
+    try {
 
-            await deleteCustomer(id);
+        await deleteCustomer(id);
+
+        toast.success(
+            'Customer Deleted Successfully'
+        );
+
+        loadCustomers();
+
+    } catch (error) {
+
+        toast.error(
+            error.response?.data?.message ||
+            'Failed To Delete Customer'
+        );
+
+        console.error(error);
+    }
+};
+
+   const handleSearch = async () => {
+
+    try {
+
+        if (!search) {
 
             loadCustomers();
 
-        } catch (error) {
-
-            console.error(error);
+            return;
         }
-    };
 
-    const handleSearch = async () => {
+        const response =
+            await searchCustomer(search);
 
-        try {
+        setCustomers(
+            response.data.data
+        );
 
-            if (!search) {
+        toast.success(
+            `${response.data.data.length} Customer(s) Found`
+        );
 
-                loadCustomers();
-                return;
-            }
+    } catch (error) {
 
-            const response =
-                await searchCustomer(search);
+        toast.error(
+            'Customer Not Found'
+        );
 
-            setCustomers(
-                response.data.data
-            );
-
-        } catch (error) {
-
-            console.error(error);
-        }
-    };
+        console.error(error);
+    }
+};
 
     return (
 
@@ -162,6 +210,16 @@ const CustomerList = () => {
                     </button>
 
                 </div>
+
+
+
+                        {
+                            loading && (
+                                <div className="text-center p-4 text-blue-600 font-semibold">
+                                    Loading Customers...
+                                </div>
+                            )
+                        }
 
                 <table className="w-full">
 

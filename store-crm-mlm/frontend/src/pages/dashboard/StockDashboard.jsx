@@ -1,4 +1,12 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import {
+    FaBoxes,
+    FaWarehouse,
+    FaRupeeSign,
+    FaExclamationTriangle
+} from 'react-icons/fa';
 
 import {
     getStockDashboard
@@ -8,6 +16,9 @@ const StockDashboard = () => {
 
     const [data, setData] =
         useState(null);
+
+    const [loading, setLoading] =
+        useState(false);
 
     useEffect(() => {
 
@@ -19,6 +30,8 @@ const StockDashboard = () => {
 
         try {
 
+            setLoading(true);
+
             const response =
                 await getStockDashboard();
 
@@ -26,60 +39,105 @@ const StockDashboard = () => {
 
         } catch (error) {
 
+            toast.error(
+                'Failed To Load Stock Dashboard'
+            );
+
             console.error(error);
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
-    if (!data)
-        return <p>Loading...</p>;
+    if (loading) {
+
+        return (
+
+            <div className="bg-blue-50 text-blue-600 p-4 rounded">
+                Loading Stock Dashboard...
+            </div>
+
+        );
+    }
+
+    if (!data) {
+
+        return (
+
+            <div className="bg-red-50 text-red-600 p-4 rounded">
+                No Stock Data Available
+            </div>
+
+        );
+    }
 
     return (
 
-        <div>
+        <div className="space-y-6">
 
-            <h1 className="text-3xl font-bold mb-6">
+            <h1 className="text-3xl font-bold">
                 Stock Dashboard
             </h1>
 
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-                <div className="bg-white p-5 rounded shadow">
+                <div className="bg-blue-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-                    <h3>Total Products</h3>
+                    <FaBoxes size={35} />
 
-                    <p className="text-3xl font-bold">
+                    <h3 className="mt-3">
+                        Total Products
+                    </h3>
+
+                    <h2 className="text-4xl font-bold">
                         {data.totalProducts}
-                    </p>
+                    </h2>
 
                 </div>
 
-                <div className="bg-white p-5 rounded shadow">
+                <div className="bg-green-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-                    <h3>Total Stock</h3>
+                    <FaWarehouse size={35} />
 
-                    <p className="text-3xl font-bold">
+                    <h3 className="mt-3">
+                        Total Stock
+                    </h3>
+
+                    <h2 className="text-4xl font-bold">
                         {data.totalStock}
-                    </p>
+                    </h2>
 
                 </div>
 
-                <div className="bg-white p-5 rounded shadow">
+                <div className="bg-purple-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-                    <h3>Inventory Value</h3>
+                    <FaRupeeSign size={35} />
 
-                    <p className="text-3xl font-bold">
-                        ₹{data.inventoryValue}
-                    </p>
+                    <h3 className="mt-3">
+                        Inventory Value
+                    </h3>
+
+                    <h2 className="text-4xl font-bold">
+                        ₹{Number(
+                            data.inventoryValue || 0
+                        ).toLocaleString()}
+                    </h2>
 
                 </div>
 
-                <div className="bg-white p-5 rounded shadow">
+                <div className="bg-red-500 text-white p-6 rounded-xl shadow hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
 
-                    <h3>Low Stock</h3>
+                    <FaExclamationTriangle size={35} />
 
-                    <p className="text-3xl font-bold">
+                    <h3 className="mt-3">
+                        Low Stock Items
+                    </h3>
+
+                    <h2 className="text-4xl font-bold">
                         {data.lowStock}
-                    </p>
+                    </h2>
 
                 </div>
 

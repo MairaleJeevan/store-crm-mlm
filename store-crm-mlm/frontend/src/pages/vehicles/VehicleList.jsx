@@ -1,4 +1,10 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import {
+    FaCar,
+    FaSignOutAlt
+} from 'react-icons/fa';
 
 import {
     getVehicles,
@@ -10,90 +16,200 @@ const VehicleList = () => {
     const [vehicles, setVehicles] =
         useState([]);
 
+    const [loading, setLoading] =
+        useState(false);
+
     useEffect(() => {
+
         loadVehicles();
+
     }, []);
 
     const loadVehicles = async () => {
 
-        const response =
-            await getVehicles();
+        try {
 
-        setVehicles(
-            response.data
-        );
+            setLoading(true);
+
+            const response =
+                await getVehicles();
+
+            setVehicles(
+                response.data || []
+            );
+
+        } catch (error) {
+
+            toast.error(
+                'Failed To Load Vehicles'
+            );
+
+            console.error(error);
+
+        } finally {
+
+            setLoading(false);
+        }
     };
 
     const handleOut =
         async (id) => {
 
-            await markVehicleOut(id);
+            try {
 
-            loadVehicles();
+                await markVehicleOut(id);
+
+                toast.success(
+                    'Vehicle Marked OUT Successfully'
+                );
+
+                loadVehicles();
+
+            } catch (error) {
+
+                toast.error(
+                    'Failed To Update Vehicle'
+                );
+
+                console.error(error);
+            }
         };
 
     return (
 
-        <div>
+        <div className="space-y-6">
 
-            <h1 className="text-3xl font-bold mb-6">
-                Vehicle Management
-            </h1>
+            <div className="flex items-center gap-3">
 
-            <table className="w-full bg-white shadow">
+                <FaCar
+                    className="text-blue-600"
+                    size={30}
+                />
 
-                <thead>
-                    <tr>
-                        <th>Vehicle No</th>
-                        <th>Model</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+                <h1 className="text-3xl font-bold">
+                    Vehicle Management
+                </h1>
 
-                <tbody>
+            </div>
 
-                    {vehicles.map(v => (
+            {
+                loading && (
 
-                        <tr key={v.id}>
+                    <div className="bg-blue-50 text-blue-600 p-3 rounded">
+                        Loading Vehicles...
+                    </div>
 
-                            <td>
-                                {v.vehicle_number}
-                            </td>
+                )
+            }
 
-                            <td>
-                                {v.vehicle_model}
-                            </td>
+            <div className="bg-white rounded-xl shadow overflow-hidden">
 
-                            <td>
-                                {v.status}
-                            </td>
+                <table className="w-full">
 
-                            <td>
+                    <thead>
 
-                                {v.status === 'IN' && (
+                        <tr className="bg-gray-100">
 
-                                    <button
-                                        onClick={() =>
-                                            handleOut(
-                                                v.id
-                                            )
-                                        }
-                                    >
-                                        Mark OUT
-                                    </button>
+                            <th className="p-4 text-left">
+                                Vehicle No
+                            </th>
 
-                                )}
+                            <th className="p-4 text-left">
+                                Model
+                            </th>
 
-                            </td>
+                            <th className="p-4 text-left">
+                                Status
+                            </th>
+
+                            <th className="p-4 text-left">
+                                Action
+                            </th>
 
                         </tr>
 
-                    ))}
+                    </thead>
 
-                </tbody>
+                    <tbody>
 
-            </table>
+                        {
+                            vehicles.length === 0 ? (
+
+                                <tr>
+
+                                    <td
+                                        colSpan="4"
+                                        className="text-center p-6 text-gray-500"
+                                    >
+                                        No Vehicles Found
+                                    </td>
+
+                                </tr>
+
+                            ) : (
+
+                                vehicles.map(v => (
+
+                                    <tr
+                                        key={v.id}
+                                        className="border-t hover:bg-gray-50"
+                                    >
+
+                                        <td className="p-4 font-medium">
+                                            {v.vehicle_number}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {v.vehicle_model}
+                                        </td>
+
+                                        <td className="p-4">
+
+                                            <span
+                                                className={
+                                                    v.status === 'IN'
+                                                        ? 'bg-green-100 text-green-600 px-3 py-1 rounded-full text-sm font-semibold'
+                                                        : 'bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold'
+                                                }
+                                            >
+                                                {v.status}
+                                            </span>
+
+                                        </td>
+
+                                        <td className="p-4">
+
+                                            {
+                                                v.status === 'IN' && (
+
+                                                    <button
+                                                        onClick={() =>
+                                                            handleOut(
+                                                                v.id
+                                                            )
+                                                        }
+                                                        className="bg-red-600 text-white px-3 py-2 rounded flex items-center gap-2 hover:bg-red-700"
+                                                    >
+                                                        <FaSignOutAlt />
+                                                        Mark OUT
+                                                    </button>
+
+                                                )
+                                            }
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+                            )
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
     );

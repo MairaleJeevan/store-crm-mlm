@@ -3,6 +3,8 @@ import {
     useState
 } from 'react';
 
+import { toast } from 'react-toastify';
+
 import {
     getFollowups,
     completeFollowup
@@ -13,6 +15,9 @@ const FollowupList = () => {
     const [followups, setFollowups] =
         useState([]);
 
+    const [loading, setLoading] =
+        useState(false);
+
     useEffect(() => {
 
         loadFollowups();
@@ -22,20 +27,48 @@ const FollowupList = () => {
     const loadFollowups =
         async () => {
 
-            const response =
-                await getFollowups();
+            try {
 
-            setFollowups(
-                response.data.data
-            );
+                setLoading(true);
+
+                const response =
+                    await getFollowups();
+
+                setFollowups(
+                    response.data.data
+                );
+
+            } catch (error) {
+
+                toast.error(
+                    'Failed To Load Followups'
+                );
+
+            } finally {
+
+                setLoading(false);
+            }
         };
 
     const handleComplete =
         async (id) => {
 
-            await completeFollowup(id);
+            try {
 
-            loadFollowups();
+                await completeFollowup(id);
+
+                toast.success(
+                    'Followup Completed'
+                );
+
+                loadFollowups();
+
+            } catch (error) {
+
+                toast.error(
+                    'Failed To Complete Followup'
+                );
+            }
         };
 
     return (
@@ -46,17 +79,42 @@ const FollowupList = () => {
                 Followups
             </h1>
 
+            <div className="bg-blue-100 text-blue-700 border border-blue-300 p-3 rounded mb-4 font-semibold">
+                📅 Customer Followups
+            </div>
+
+            {
+                loading && (
+                    <div className="text-center p-4 text-blue-600 font-semibold">
+                        Loading Followups...
+                    </div>
+                )
+            }
+
             <div className="bg-white p-6 rounded shadow">
 
                 <table className="w-full">
 
                     <thead>
 
-                        <tr>
-                            <th>Date</th>
-                            <th>Remarks</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                        <tr className="border-b">
+
+                            <th className="p-3">
+                                Date
+                            </th>
+
+                            <th className="p-3">
+                                Remarks
+                            </th>
+
+                            <th className="p-3">
+                                Status
+                            </th>
+
+                            <th className="p-3">
+                                Action
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -70,19 +128,25 @@ const FollowupList = () => {
                                 className="border-b"
                             >
 
-                                <td>
+                                <td className="p-3">
                                     {item.followup_date}
                                 </td>
 
-                                <td>
+                                <td className="p-3">
                                     {item.remarks}
                                 </td>
 
-                                <td>
+                                <td
+                                    className={`p-3 font-bold ${
+                                        item.status === 'COMPLETED'
+                                            ? 'text-green-600'
+                                            : 'text-orange-500'
+                                    }`}
+                                >
                                     {item.status}
                                 </td>
 
-                                <td>
+                                <td className="p-3">
 
                                     {item.status ===
                                         'PENDING' && (

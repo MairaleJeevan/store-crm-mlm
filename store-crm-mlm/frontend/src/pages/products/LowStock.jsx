@@ -1,10 +1,21 @@
 import { useEffect, useState } from 'react';
-import { getLowStockProducts } from '../../api/productApi';
+import { toast } from 'react-toastify';
+
+import {
+    FaExclamationTriangle
+} from 'react-icons/fa';
+
+import {
+    getLowStockProducts
+} from '../../api/productApi';
 
 const LowStock = () => {
 
     const [products, setProducts] =
         useState([]);
+
+    const [loading, setLoading] =
+        useState(false);
 
     useEffect(() => {
 
@@ -16,6 +27,8 @@ const LowStock = () => {
 
         try {
 
+            setLoading(true);
+
             const response =
                 await getLowStockProducts();
 
@@ -25,73 +38,127 @@ const LowStock = () => {
 
         } catch (error) {
 
+            toast.error(
+                'Failed To Load Low Stock Products'
+            );
+
             console.error(error);
+
+        } finally {
+
+            setLoading(false);
         }
     };
 
     return (
 
-        <div>
+        <div className="space-y-6">
 
-            <h1 className="text-3xl font-bold mb-6">
-                Low Stock Products
-            </h1>
+            <div className="flex items-center gap-3">
 
-            <table className="w-full bg-white shadow">
+                <FaExclamationTriangle
+                    className="text-red-500"
+                    size={30}
+                />
 
-                <thead>
+                <h1 className="text-3xl font-bold">
+                    Low Stock Products
+                </h1>
 
-                    <tr className="bg-gray-100">
+            </div>
 
-                        <th className="p-3">
-                            Product
-                        </th>
+            {loading && (
 
-                        <th className="p-3">
-                            Current Stock
-                        </th>
+                <div className="bg-blue-50 text-blue-600 p-3 rounded">
+                    Loading Products...
+                </div>
 
-                        <th className="p-3">
-                            Minimum Stock
-                        </th>
+            )}
 
-                        <th className="p-3">
-                            Status
-                        </th>
+            <div className="bg-white rounded-xl shadow overflow-hidden">
 
-                    </tr>
+                <table className="w-full">
 
-                </thead>
+                    <thead>
 
-                <tbody>
+                        <tr className="bg-gray-100">
 
-                    {products.map(product => (
+                            <th className="p-4 text-left">
+                                Product
+                            </th>
 
-                        <tr key={product.id}>
+                            <th className="p-4 text-left">
+                                Current Stock
+                            </th>
 
-                            <td className="p-3">
-                                {product.product_name}
-                            </td>
+                            <th className="p-4 text-left">
+                                Minimum Stock
+                            </th>
 
-                            <td className="p-3">
-                                {product.stock_quantity}
-                            </td>
-
-                            <td className="p-3">
-                                {product.min_stock}
-                            </td>
-
-                            <td className="p-3 text-red-600 font-bold">
-                                LOW STOCK
-                            </td>
+                            <th className="p-4 text-left">
+                                Status
+                            </th>
 
                         </tr>
 
-                    ))}
+                    </thead>
 
-                </tbody>
+                    <tbody>
 
-            </table>
+                        {
+                            products.length === 0 ? (
+
+                                <tr>
+
+                                    <td
+                                        colSpan="4"
+                                        className="text-center p-6 text-gray-500"
+                                    >
+                                        No Low Stock Products
+                                    </td>
+
+                                </tr>
+
+                            ) : (
+
+                                products.map(product => (
+
+                                    <tr
+                                        key={product.id}
+                                        className="border-t hover:bg-gray-50"
+                                    >
+
+                                        <td className="p-4 font-medium">
+                                            {product.product_name}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {product.stock_quantity}
+                                        </td>
+
+                                        <td className="p-4">
+                                            {product.min_stock}
+                                        </td>
+
+                                        <td className="p-4">
+
+                                            <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">
+                                                LOW STOCK
+                                            </span>
+
+                                        </td>
+
+                                    </tr>
+
+                                ))
+                            )
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
 
         </div>
     );
