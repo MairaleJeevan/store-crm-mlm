@@ -4,8 +4,8 @@ import {
     getLeads,
     createLead,
     convertLead,
-    updateLeadStatus
-} from '../../api/leadApi';
+    updateLeadStatus,
+   } from '../../api/leadApi';
 
 const LeadList = () => {
 
@@ -74,6 +74,7 @@ const LeadList = () => {
         loadLeads();
     };
 
+  
     return (
 
         <div>
@@ -250,6 +251,7 @@ const LeadList = () => {
                                             </button>
 
                                         )}
+                                        <th>Action</th>
 
                                     </div>
 

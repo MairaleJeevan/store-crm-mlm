@@ -14,6 +14,7 @@ const {
     updateLeadStatus,
     getLeadPipeline,
     
+    
 } = require(
     '../controllers/leadController'
 );
@@ -25,6 +26,7 @@ router.get('/', getLeads);
 router.post('/convert/:id',convertLead);
 router.put('/status/:id', updateLeadStatus);
 router.get('/pipeline', getLeadPipeline);
+
 
 
 module.exports = router;
