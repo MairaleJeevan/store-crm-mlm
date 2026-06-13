@@ -372,6 +372,9 @@ async (req, res) => {
         });
     }
 };
+
+
+
 module.exports = {
     getDashboardSummary,
     getCustomerReport,
@@ -379,5 +382,6 @@ module.exports = {
     getCommissionReport,
     getLowStockReport,
     getDashboardCharts,
-    getBusinessReport
+    getBusinessReport,
+    
 };

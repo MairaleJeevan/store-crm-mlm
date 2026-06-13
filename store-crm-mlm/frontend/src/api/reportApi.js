@@ -9,24 +9,29 @@ export const getDashboardSummary = async () => {
     return response.data;
 };
 
-export const getDashboardCharts =
-    async () => {
+export const getDashboardCharts = async () => {
 
-        const response =
-            await api.get(
-                '/reports/charts'
-            );
+    const response = await api.get(
+        '/reports/charts'
+    );
 
-        return response.data;
-    };
+    return response.data;
+};
 
-export const getBusinessReport =
-async () => {
+export const getBusinessReport = async () => {
 
-    const response =
-        await api.get(
-            '/reports/business'
-        );
+    const response = await api.get(
+        '/reports/business'
+    );
+
+    return response.data;
+};
+
+export const getSalesReport = async () => {
+
+    const response = await api.get(
+        '/reports/sales'
+    );
 
     return response.data;
 };

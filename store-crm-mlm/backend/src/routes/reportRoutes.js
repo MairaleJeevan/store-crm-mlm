@@ -5,6 +5,9 @@ const router = express.Router();
 const authMiddleware =
     require('../middleware/authMiddleware');
 
+const authorize =
+    require('../middleware/authorize');
+
 const {
     getDashboardSummary,
     getCustomerReport,
@@ -17,21 +20,45 @@ const {
 
 router.use(authMiddleware);
 
-router.get('/dashboard',getDashboardSummary);
+router.get(
+    '/dashboard',
+    authorize('ADMIN', 'MANAGER'),
+    getDashboardSummary
+);
 
-router.get('/customers', getCustomerReport);
+router.get(
+    '/customers',
+    authorize('ADMIN', 'MANAGER'),
+    getCustomerReport
+);
 
-router.get('/sales', getSalesReport);
+router.get(
+    '/sales',
+    authorize('ADMIN', 'MANAGER'),
+    getSalesReport
+);
 
-router.get('/commissions', getCommissionReport);
+router.get(
+    '/commissions',
+    authorize('ADMIN'),
+    getCommissionReport
+);
 
-router.get('/low-stock', getLowStockReport);
+router.get(
+    '/low-stock',
+    authorize('ADMIN', 'MANAGER'),
+    getLowStockReport
+);
 
-router.get('/business', getBusinessReport);
+router.get(
+    '/business',
+    authorize('ADMIN', 'MANAGER'),
+    getBusinessReport
+);
 
 router.get(
     '/charts',
-    authMiddleware,
+    authorize('ADMIN', 'MANAGER'),
     getDashboardCharts
 );
 

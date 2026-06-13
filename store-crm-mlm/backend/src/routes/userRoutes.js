@@ -5,6 +5,9 @@ const router = express.Router();
 const authMiddleware =
     require('../middleware/authMiddleware');
 
+const authorize =
+    require('../middleware/authorize');
+
 const {
     getUsers,
     createUser,
@@ -14,13 +17,28 @@ const {
 
 router.use(authMiddleware);
 
-router.get('/', getUsers);
+router.get(
+    '/',
+    authorize('ADMIN'),
+    getUsers
+);
 
-router.post('/', createUser);
+router.post(
+    '/',
+    authorize('ADMIN'),
+    createUser
+);
 
-router.put('/:id', updateUser);
+router.put(
+    '/:id',
+    authorize('ADMIN'),
+    updateUser
+);
 
-router.delete('/:id', deleteUser);
-
+router.delete(
+    '/:id',
+    authorize('ADMIN'),
+    deleteUser
+);
 
 module.exports = router;
