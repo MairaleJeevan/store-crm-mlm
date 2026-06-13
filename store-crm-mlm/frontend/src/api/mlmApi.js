@@ -1,10 +1,33 @@
 import api from './api';
 
-export const getMLMTree = async (userId) => {
+// Register MLM User
+export const createMLMUser = (data) =>
+    api.post('/mlm/register', data);
 
-    const response = await api.get(
-        `/mlm/team/${userId}`
-    );
+// Get MLM Team Tree
+export const getMLMTree = (userId) =>
+    api.get(`/mlm/team/${userId}`);
 
-    return response.data;
-};
+// Get Downlines
+export const getDownlines = (userId) =>
+    api.get(`/mlm/downlines/${userId}`);
+
+// MLM Dashboard
+export const getMLMDashboard = (userId) =>
+    api.get(`/mlm/dashboard/${userId}`);
+
+// Get All Users
+export const getUsers = () =>
+    api.get('/users');
+
+// Create User
+export const createUser = (data) =>
+    api.post('/users', data);
+
+// Update User
+export const updateUser = (id, data) =>
+    api.put(`/users/${id}`, data);
+
+// Delete User
+export const deleteUser = (id) =>
+    api.delete(`/users/${id}`);

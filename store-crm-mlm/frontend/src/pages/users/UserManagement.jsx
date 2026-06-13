@@ -4,7 +4,7 @@ import UserForm from '../../components/UserForm';
 
 import UserTable from '../../components/UserTable';
 
-import { getUsers } from '../../api/userApi';
+import { getUsers, createUser, deleteUser } from '../../api/userApi';
 
 const UserManagement = () => {
 

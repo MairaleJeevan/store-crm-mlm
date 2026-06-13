@@ -2,6 +2,43 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { getMLMTree } from '../../api/mlmApi';
 
+const MLMNode = ({ member }) => {
+    return (
+        <div className="ml-6 mt-2">
+            <div className="bg-white shadow p-3 rounded border">
+                <h3 className="font-bold">
+                    {member.full_name}
+                </h3>
+
+                <p>
+                    {member.email}
+                </p>
+
+                <p>
+                    Referral:
+                    {' '}
+                    {member.referral_code}
+                </p>
+
+                <p>
+                    Level:
+                    {' '}
+                    {member.level}
+                </p>
+            </div>
+
+            {member.downlines?.length > 0 &&
+                member.downlines.map(child => (
+                    <MLMNode
+                        key={child.id}
+                        member={child}
+                    />
+                ))
+            }
+        </div>
+    );
+};
+
 const MLMTree = () => {
 
     const { user } = useAuth();
@@ -11,9 +48,11 @@ const MLMTree = () => {
 
     useEffect(() => {
 
-        loadTree();
+        if (user?.id) {
+            loadTree();
+        }
 
-    }, []);
+    }, [user]);
 
     const loadTree = async () => {
 
@@ -22,62 +61,17 @@ const MLMTree = () => {
             const response =
                 await getMLMTree(user.id);
 
-            setTree(response.data);
+            setTree(
+                response.data.data || []
+            );
 
         } catch (error) {
 
-            console.error(error);
+            console.error(
+                'MLM Tree Error:',
+                error
+            );
         }
-    };
-
-    const renderTree = (nodes) => {
-
-        return (
-            <ul className="ml-6 mt-2">
-
-                {nodes.map(node => (
-
-                    <li
-                        key={node.id}
-                        className="mb-2"
-                    >
-
-                        <div className="bg-white p-3 rounded shadow">
-
-                            <strong>
-                                {node.full_name}
-                            </strong>
-
-                            <p>
-                                {node.email}
-                            </p>
-
-                            <p>
-                                Referral:
-                                {' '}
-                                {node.referral_code}
-                            </p>
-
-                            <p>
-                                Level:
-                                {' '}
-                                {node.level}
-                            </p>
-
-                        </div>
-
-                        {node.downlines &&
-                            node.downlines.length > 0 &&
-                            renderTree(
-                                node.downlines
-                            )}
-
-                    </li>
-
-                ))}
-
-            </ul>
-        );
     };
 
     return (
@@ -88,7 +82,20 @@ const MLMTree = () => {
                 MLM Team Tree
             </h1>
 
-            {renderTree(tree)}
+            {
+                tree.length > 0 ? (
+                    tree.map(member => (
+                        <MLMNode
+                            key={member.id}
+                            member={member}
+                        />
+                    ))
+                ) : (
+                    <div className="bg-white p-4 rounded shadow">
+                        No Downlines Found
+                    </div>
+                )
+            }
 
         </div>
     );
