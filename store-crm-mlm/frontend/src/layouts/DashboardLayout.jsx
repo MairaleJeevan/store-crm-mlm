@@ -156,75 +156,89 @@ const DashboardLayout = () => {
                         )}
 
 
-                        <li>
-                            <Link
-                                to="/vehicles"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Vehicles
-                            </Link>
-                        </li>
+                       {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/vehicles"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Vehicles
+                                </Link>
+                            </li>
+                        )}
 
 
-                        <li>
-                            <Link
-                                to="/stock-dashboard"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Stock Dashboard
-                            </Link>
-                        </li>
+                       {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/stock-dashboard"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Stock Dashboard
+                                </Link>
+                            </li>
+                        )}
 
 
-                        <li>
-                            <Link
-                                to="/followup-dashboard"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Followup Dashboard
-                            </Link>
-                        </li>
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/followup-dashboard"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Followup Dashboard
+                                </Link>
+                            </li>
+                        )}
 
-                        <li>
-                            <Link
-                                to="/leads"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Leads
-                            </Link>
-                        </li>
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/leads"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Leads
+                                </Link>
+                            </li>
+                        )}
                        
 
-                       <li>
-                            <Link
-                                to="/lead-pipeline"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Lead Pipeline
-                            </Link>
-                        </li>
+                      {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/lead-pipeline"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Lead Pipeline
+                                </Link>
+                            </li>
+                        )}
 
-                        <li>
-                            <Link
-                                to="/sales-targets"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                Sales Targets
-                            </Link>
-                        </li>
-
-
-                        <li>
-                            <Link
-                                to="/followups"
-                                className="block px-3 py-2 rounded hover:bg-gray-700"
-                            >
-                                All Followups
-                            </Link>
-                        </li>
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/sales-targets"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Sales Targets
+                                </Link>
+                            </li>
+                        )}
 
 
-                        {user?.role === 'ADMIN' && (
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/followups"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    All Followups
+                                </Link>
+                            </li>
+                        )}
+
+
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
 
                             <>
                                 <li>
