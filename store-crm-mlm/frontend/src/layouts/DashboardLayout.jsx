@@ -23,6 +23,7 @@ const DashboardLayout = () => {
 
                     <ul className="space-y-2">
 
+                        {/* Dashboard */}
                         <li>
                             <Link
                                 to="/dashboard"
@@ -32,24 +33,20 @@ const DashboardLayout = () => {
                             </Link>
                         </li>
 
-                        {[
-                                'ADMIN',
-                                'MANAGER'
-                            ].includes(user?.role) && (
-
-                                <li>
-                                    <Link
-                                        to="/customers"
-                                        className="block px-3 py-2 rounded hover:bg-gray-700"
-                                    >
-                                        Customers
-                                    </Link>
-                                </li>
-
+                        {/* Customers */}
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/customers"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    Customers
+                                </Link>
+                            </li>
                         )}
 
+                        {/* Products */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
-
                             <li>
                                 <Link
                                     to="/products"
@@ -58,12 +55,10 @@ const DashboardLayout = () => {
                                     Products
                                 </Link>
                             </li>
-
                         )}
 
-
-                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
-
+                        {/* Inventory */}
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
                                     to="/inventory"
@@ -72,12 +67,10 @@ const DashboardLayout = () => {
                                     Inventory
                                 </Link>
                             </li>
-
                         )}
-                        
 
+                        {/* Low Stock */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
-
                             <li>
                                 <Link
                                     to="/low-stock"
@@ -86,11 +79,10 @@ const DashboardLayout = () => {
                                     Low Stock
                                 </Link>
                             </li>
-
                         )}
 
+                        {/* Sales */}
                         {['ADMIN', 'MANAGER', 'SALES_EXECUTIVE'].includes(user?.role) && (
-
                             <li>
                                 <Link
                                     to="/sales"
@@ -99,11 +91,10 @@ const DashboardLayout = () => {
                                     Sales
                                 </Link>
                             </li>
-
                         )}
 
+                        {/* Commissions */}
                         {['ADMIN', 'MLM_USER'].includes(user?.role) && (
-
                             <li>
                                 <Link
                                     to="/commissions"
@@ -112,11 +103,10 @@ const DashboardLayout = () => {
                                     Commissions
                                 </Link>
                             </li>
-
                         )}
-  
-                        {user?.role === 'ADMIN' && (
 
+                        {/* Exports */}
+                        {user?.role === 'ADMIN' && (
                             <li>
                                 <Link
                                     to="/exports"
@@ -125,12 +115,10 @@ const DashboardLayout = () => {
                                     Exports
                                 </Link>
                             </li>
-
                         )}
 
-
+                        {/* Reminders */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
-
                             <li>
                                 <Link
                                     to="/reminders"
@@ -139,11 +127,10 @@ const DashboardLayout = () => {
                                     Reminders
                                 </Link>
                             </li>
-
                         )}
 
+                        {/* Reports */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
-
                             <li>
                                 <Link
                                     to="/reports"
@@ -152,11 +139,10 @@ const DashboardLayout = () => {
                                     Reports
                                 </Link>
                             </li>
-
                         )}
 
-
-                       {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                        {/* Vehicles */}
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
                                     to="/vehicles"
@@ -167,8 +153,8 @@ const DashboardLayout = () => {
                             </li>
                         )}
 
-
-                       {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                        {/* Stock Dashboard */}
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
                                     to="/stock-dashboard"
@@ -179,7 +165,7 @@ const DashboardLayout = () => {
                             </li>
                         )}
 
-
+                        {/* Followup Dashboard */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
@@ -191,6 +177,7 @@ const DashboardLayout = () => {
                             </li>
                         )}
 
+                        {/* Leads */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
@@ -201,9 +188,9 @@ const DashboardLayout = () => {
                                 </Link>
                             </li>
                         )}
-                       
 
-                      {['ADMIN', 'MANAGER'].includes(user?.role) && (
+                        {/* Lead Pipeline */}
+                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
                                     to="/lead-pipeline"
@@ -214,6 +201,7 @@ const DashboardLayout = () => {
                             </li>
                         )}
 
+                        {/* Sales Targets */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
@@ -225,7 +213,7 @@ const DashboardLayout = () => {
                             </li>
                         )}
 
-
+                        {/* All Followups */}
                         {['ADMIN', 'MANAGER'].includes(user?.role) && (
                             <li>
                                 <Link
@@ -237,29 +225,28 @@ const DashboardLayout = () => {
                             </li>
                         )}
 
+                        {/* User Management */}
+                        {user?.role === 'ADMIN' && (
+                            <li>
+                                <Link
+                                    to="/users"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    User Management
+                                </Link>
+                            </li>
+                        )}
 
-                        {['ADMIN', 'MANAGER'].includes(user?.role) && (
-
-                            <>
-                                <li>
-                                    <Link
-                                        to="/users"
-                                        className="block px-3 py-2 rounded hover:bg-gray-700"
-                                    >
-                                        User Management
-                                    </Link>
-                                </li>
-
-                                <li>
-                                    <Link
-                                        to="/mlm-tree"
-                                        className="block px-3 py-2 rounded hover:bg-gray-700"
-                                    >
-                                        MLM Tree
-                                    </Link>
-                                </li>
-                            </>
-
+                        {/* MLM Tree */}
+                        {['ADMIN', 'MLM_USER'].includes(user?.role) && (
+                            <li>
+                                <Link
+                                    to="/mlm-tree"
+                                    className="block px-3 py-2 rounded hover:bg-gray-700"
+                                >
+                                    MLM Tree
+                                </Link>
+                            </li>
                         )}
 
                     </ul>
